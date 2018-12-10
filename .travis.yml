@@ -1,1 +1,3 @@
 language: java
+notifications:
+  slack: serviceulmeu:ZhAFcbRlnPKUo2pnIdy2wpjo
