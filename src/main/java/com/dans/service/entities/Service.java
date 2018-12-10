@@ -35,7 +35,7 @@ public class Service {
     private String phoneNumber;
 
     @NotBlank
-    private Long CUI;
+    private Long cui;
 
     @OneToMany(
             mappedBy = "service",
