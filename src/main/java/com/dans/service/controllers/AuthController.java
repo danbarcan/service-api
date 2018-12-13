@@ -48,7 +48,7 @@ public class AuthController {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
+                        loginRequest.getUsernameOrEmail(),
                         loginRequest.getPassword()
                 )
         );
@@ -80,7 +80,7 @@ public class AuthController {
         User result = userRepository.save(user);
 
         URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/Car/{username}")
+                .fromCurrentContextPath().path("/Car/{usernameOrEmail}")
                 .buildAndExpand(result.getEmail()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));

@@ -16,7 +16,7 @@ before_install:
 #postgres:
 #  adapter: postgresql
 #  database: myapp_test
-#  username: postgres
+#  usernameOrEmail: postgres
 #
 env:
   global:
