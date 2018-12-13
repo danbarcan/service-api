@@ -21,8 +21,7 @@ postgres:
 env:
   - SPRING_DATASOURCE_URL=jdbcpostgres://postgres@localhost/service-finder
   - SPRING_DATASOURCE_USERNAME=postgres
-  - SPRING_DATASOURCE_PASSWORD=admin
+  - SPRING_DATASOURCE_PASSWORD=
 
 before_script:
-  - psql -c "CREATE DATABASE finder;" -U postgres
-  - psql -c "CREATE USER postgres WITH PASSWORD 'admin';" -U postgres
+  - psql -c "CREATE DATABASE service-finder;" -U postgres
