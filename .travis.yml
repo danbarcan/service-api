@@ -12,3 +12,17 @@ services:
 
 before_install:
   - chmod +x mvnw
+
+postgres:
+  adapter: postgresql
+  database: myapp_test
+  username: postgres
+
+env:
+  - SPRING_DATASOURCE_URL=jdbcpostgres://postgres@localhost/service-finder
+  - SPRING_DATASOURCE_USERNAME=postgres
+  - SPRING_DATASOURCE_PASSWORD=admin
+
+before_script:
+  - psql -c "CREATE DATABASE finder;" -U postgres
+  - psql -c "CREATE USER postgres WITH PASSWORD 'admin';" -U postgres
