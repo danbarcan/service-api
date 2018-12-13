@@ -13,16 +13,16 @@ services:
 before_install:
   - chmod +x mvnw
 
-postgres:
-  adapter: postgresql
-  database: myapp_test
-  username: postgres
-
-env:
-  global:
-    - SPRING_DATASOURCE_URL=jdbc:postgres://postgres@localhost/service_finder
-    - SPRING_DATASOURCE_USERNAME=postgres
-    - SPRING_DATASOURCE_PASSWORD=
-
-before_script:
-  - psql -c "CREATE DATABASE service_finder;" -U postgres
+#postgres:
+#  adapter: postgresql
+#  database: myapp_test
+#  username: postgres
+#
+#env:
+#  global:
+#    - SPRING_DATASOURCE_URL=jdbc:postgres://postgres@localhost/service_finder
+#    - SPRING_DATASOURCE_USERNAME=postgres
+#    - SPRING_DATASOURCE_PASSWORD=
+#
+#before_script:
+#  - psql -c "CREATE DATABASE service_finder;" -U postgres
