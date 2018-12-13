@@ -19,7 +19,7 @@ postgres:
   username: postgres
 
 env:
-  - SPRING_DATASOURCE_URL=jdbcpostgres://postgres@localhost/service_finder
+  - SPRING_DATASOURCE_URL=jdbc:postgres://postgres@localhost/service_finder
   - SPRING_DATASOURCE_USERNAME=postgres
   - SPRING_DATASOURCE_PASSWORD=
 
