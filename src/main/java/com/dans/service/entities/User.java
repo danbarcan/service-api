@@ -61,4 +61,13 @@ public class User {
             fetch = FetchType.LAZY
     )
     private List<Job> jobs;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Car> cars;
+
 }

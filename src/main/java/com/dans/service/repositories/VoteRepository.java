@@ -7,16 +7,16 @@ public interface VoteRepository {
     @Query("SELECT NEW com.example.polls.model.ChoiceVoteCount(v.choice.id, count(v.id)) FROM Vote v WHERE v.poll.id = :pollId GROUP BY v.choice.id")
     List<ChoiceVoteCount> countByPollIdGroupByChoiceId(@Param("pollId") Long pollId);
 
-    @Query("SELECT v FROM Vote v where v.user.id = :userId and v.poll.id in :pollIds")
-    List<Vote> findByUserIdAndPollIdIn(@Param("userId") Long userId, @Param("pollIds") List<Long> pollIds);
+    @Query("SELECT v FROM Vote v where v.user.id = :user and v.poll.id in :pollIds")
+    List<Vote> findByUserIdAndPollIdIn(@Param("user") Long user, @Param("pollIds") List<Long> pollIds);
 
-    @Query("SELECT v FROM Vote v where v.user.id = :userId and v.poll.id = :pollId")
-    Vote findByUserIdAndPollId(@Param("userId") Long userId, @Param("pollId") Long pollId);
+    @Query("SELECT v FROM Vote v where v.user.id = :user and v.poll.id = :pollId")
+    Vote findByUserIdAndPollId(@Param("user") Long user, @Param("pollId") Long pollId);
 
-    @Query("SELECT COUNT(v.id) from Vote v where v.user.id = :userId")
-    long countByUserId(@Param("userId") Long userId);
+    @Query("SELECT COUNT(v.id) from Vote v where v.user.id = :user")
+    long countByUserId(@Param("user") Long user);
 
-    @Query("SELECT v.poll.id FROM Vote v WHERE v.user.id = :userId")
-    Page<Long> findVotedPollIdsByUserId(@Param("userId") Long userId, Pageable pageable);*/
+    @Query("SELECT v.poll.id FROM Vote v WHERE v.user.id = :user")
+    Page<Long> findVotedPollIdsByUserId(@Param("user") Long user, Pageable pageable);*/
 }
 

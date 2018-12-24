@@ -23,30 +23,28 @@ public class UserRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Test
-    public void findByUsernameShouldReturnUser() {
-        this.entityManager.persist(User.builder().email("test@test.com")
+    private User user = User.builder().email("test@test.com")
                 .password("password")
                 .firstName("test")
                 .lastName("test")
                 .phoneNumber("07test")
-                .build());
+                .build();
+
+    @Test
+    public void findByUsernameShouldReturnUser() {
+        this.entityManager.persist(this.user);
         Optional<User> user = this.userRepository.findByEmail("test@test.com");
         Assertions.assertThat(user.isPresent());
-        Assertions.assertThat(user.get().getEmail().equals("test@test.com"));
-        Assertions.assertThat(user.get().getFirstName().equals("test"));
-        Assertions.assertThat(user.get().getLastName().equals("test"));
-        Assertions.assertThat(user.get().getPhoneNumber().equals("07test"));
+        Assertions.assertThat(user.get().getEmail().equals(this.user.getEmail()));
+        Assertions.assertThat(user.get().getFirstName().equals(this.user.getFirstName()));
+        Assertions.assertThat(user.get().getLastName().equals(this.user.getLastName()));
+        Assertions.assertThat(user.get().getPhoneNumber().equals(this.user.getPhoneNumber()));
+        Assertions.assertThat(user.get().equals(this.user));
     }
 
     @Test
     public void findByUsernameWhenNoUserShouldReturnNull() {
-        this.entityManager.persist(User.builder().email("test@test.com")
-                .password("password")
-                .firstName("test")
-                .lastName("test")
-                .phoneNumber("07test")
-                .build());
+        this.entityManager.persist(this.user);
         Optional<User> user = this.userRepository.findByEmail("mmouse");
         Assertions.assertThat(!user.isPresent());
     }

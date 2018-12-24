@@ -1,6 +1,9 @@
 package com.dans.service.test.repositories;
 
+import com.dans.service.entities.Car;
+import com.dans.service.entities.User;
 import com.dans.service.repositories.CarRepository;
+import com.dans.service.repositories.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,9 +12,15 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+import java.util.Optional;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class CarRepositoryTest {
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private TestEntityManager entityManager;
@@ -19,8 +28,47 @@ public class CarRepositoryTest {
     @Autowired
     private CarRepository carRepository;
 
+    private User user = User.builder().email("test@test.com")
+            .password("password")
+            .firstName("test")
+            .lastName("test")
+            .phoneNumber("07test")
+            .build();
+
+    private Car car = Car.builder()
+            .brand("Mercedes")
+            .km(1000L)
+            .user(user)
+            .build();
+
     @Test
-    public void mockTest() {
-        Assertions.assertThat(true);
+    public void findAllShouldReturnCars() {
+        this.entityManager.persist(user);
+        this.entityManager.persist(car);
+        List<Car> cars = carRepository.findAll();
+        Assertions.assertThat(cars != null && cars.size() == 1);
+    }
+
+    @Test
+    public void findAllShouldReturnNull() {
+        List<Car> cars = carRepository.findAll();
+        Assertions.assertThat(cars == null || cars.size() == 0);
+    }
+
+    @Test
+    public void findByIdShouldReturnCar() {
+        this.entityManager.persist(user);
+        this.entityManager.persist(car);
+        List<Car> cars = this.carRepository.findAll();
+        Car car1 = cars.get(0);
+        Optional<Car> car = carRepository.findById(car1.getId());
+        Assertions.assertThat(car.isPresent());
+        Assertions.assertThat(car.get().equals(car1));
+    }
+
+    @Test
+    public void findByIdShouldReturnNull() {
+        Optional<Car> car = carRepository.findById(-1L);
+        Assertions.assertThat(!car.isPresent());
     }
 }
