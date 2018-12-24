@@ -6,6 +6,8 @@ deploy:
   provider: heroku
   api_key:
     secure: 7b7631a8-a6b4-4f37-b1cc-f02428be5a61
+  app:
+    serice-api
 
 #services:
 #  - postgresql
