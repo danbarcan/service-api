@@ -7,8 +7,8 @@ deploy:
   api_key:
     secure: 7b7631a8-a6b4-4f37-b1cc-f02428be5a61
 
-services:
-  - postgresql
+#services:
+#  - postgresql
 
 before_install:
   - chmod +x mvnw
@@ -18,11 +18,11 @@ before_install:
 #  database: myapp_test
 #  usernameOrEmail: postgres
 #
-env:
-  global:
-    - SPRING_DATASOURCE_URL=jdbc:postgres://postgres@localhost/service_finder
-    - SPRING_DATASOURCE_USERNAME=postgres
-    - SPRING_DATASOURCE_PASSWORD=
+#env:
+#  global:
+#    - SPRING_DATASOURCE_URL=jdbc:postgres://postgres@localhost/service_finder
+#    - SPRING_DATASOURCE_USERNAME=postgres
+#    - SPRING_DATASOURCE_PASSWORD=
 #
 #before_script:
 #  - psql -c "CREATE DATABASE service_finder;" -U postgres
