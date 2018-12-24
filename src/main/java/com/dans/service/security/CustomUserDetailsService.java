@@ -18,8 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String byEmail)
-            throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String byEmail) {
         // Let people login with either usernameOrEmail or email
         User user = userRepository.findByEmail(byEmail)
                 .orElseThrow(() ->

@@ -46,13 +46,13 @@ public class CarRepositoryTest {
         this.entityManager.persist(user);
         this.entityManager.persist(car);
         List<Car> cars = carRepository.findAll();
-        Assertions.assertThat(cars != null && cars.size() == 1);
+        Assertions.assertThat(cars != null && cars.size() == 1).isTrue();
     }
 
     @Test
     public void findAllShouldReturnNull() {
         List<Car> cars = carRepository.findAll();
-        Assertions.assertThat(cars == null || cars.size() == 0);
+        Assertions.assertThat(cars != null && cars.size() == 1).isFalse();
     }
 
     @Test
@@ -62,13 +62,13 @@ public class CarRepositoryTest {
         List<Car> cars = this.carRepository.findAll();
         Car car1 = cars.get(0);
         Optional<Car> car = carRepository.findById(car1.getId());
-        Assertions.assertThat(car.isPresent());
-        Assertions.assertThat(car.get().equals(car1));
+        Assertions.assertThat(car.isPresent()).isTrue();
+        Assertions.assertThat(car.get().equals(car1)).isTrue();
     }
 
     @Test
     public void findByIdShouldReturnNull() {
         Optional<Car> car = carRepository.findById(-1L);
-        Assertions.assertThat(!car.isPresent());
+        Assertions.assertThat(car.isPresent()).isFalse();
     }
 }

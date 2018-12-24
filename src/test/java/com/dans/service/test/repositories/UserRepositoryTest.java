@@ -34,19 +34,19 @@ public class UserRepositoryTest {
     public void findByUsernameShouldReturnUser() {
         this.entityManager.persist(this.user);
         Optional<User> user = this.userRepository.findByEmail("test@test.com");
-        Assertions.assertThat(user.isPresent());
-        Assertions.assertThat(user.get().getEmail().equals(this.user.getEmail()));
-        Assertions.assertThat(user.get().getFirstName().equals(this.user.getFirstName()));
-        Assertions.assertThat(user.get().getLastName().equals(this.user.getLastName()));
-        Assertions.assertThat(user.get().getPhoneNumber().equals(this.user.getPhoneNumber()));
-        Assertions.assertThat(user.get().equals(this.user));
+        Assertions.assertThat(user.isPresent()).isTrue();
+        Assertions.assertThat(user.get().getEmail().equals(this.user.getEmail())).isTrue();
+        Assertions.assertThat(user.get().getFirstName().equals(this.user.getFirstName())).isTrue();
+        Assertions.assertThat(user.get().getLastName().equals(this.user.getLastName())).isTrue();
+        Assertions.assertThat(user.get().getPhoneNumber().equals(this.user.getPhoneNumber())).isTrue();
+        Assertions.assertThat(user.get().equals(this.user)).isTrue();
     }
 
     @Test
     public void findByUsernameWhenNoUserShouldReturnNull() {
         this.entityManager.persist(this.user);
         Optional<User> user = this.userRepository.findByEmail("mmouse");
-        Assertions.assertThat(!user.isPresent());
+        Assertions.assertThat(user.isPresent()).isFalse();
     }
 
 }

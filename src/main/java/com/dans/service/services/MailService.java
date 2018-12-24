@@ -1,5 +1,7 @@
 package com.dans.service.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
@@ -11,7 +13,9 @@ import java.util.Properties;
 @Service
 public class MailService {
 
-    public void sendmail() throws AddressException, MessagingException, IOException {
+    private static final Logger log = LoggerFactory.getLogger(MailService.class);
+
+    public void sendmail() throws MessagingException, IOException {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
@@ -19,6 +23,7 @@ public class MailService {
         props.put("mail.smtp.port", "587");
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication("dan.barcan1994", "******");
             }
@@ -78,10 +83,9 @@ public class MailService {
             transport.close();
         }
         catch (AddressException ae) {
-            ae.printStackTrace();
-        }
-        catch (MessagingException me) {
-            me.printStackTrace();
+            log.error(ae.getMessage(), ae);
+        } catch (MessagingException me) {
+            log.error(me.getMessage(), me);
         }
     }
 }
