@@ -1,6 +1,8 @@
 package com.dans.service.test.repositories;
 
 import com.dans.service.repositories.CarRepository;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,4 +18,9 @@ public class CarRepositoryTest {
 
     @Autowired
     private CarRepository carRepository;
+
+    @Test
+    public void mockTest() {
+        Assertions.assertThat(true);
+    }
 }
