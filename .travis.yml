@@ -9,22 +9,14 @@ deploy:
   app:
     serice-api
 
-#services:
-#  - postgresql
-
 before_install:
   - chmod +x mvnw
 
-#postgres:
-#  adapter: postgresql
-#  database: myapp_test
-#  usernameOrEmail: postgres
-#
-#env:
-#  global:
-#    - SPRING_DATASOURCE_URL=jdbc:postgres://postgres@localhost/service_finder
-#    - SPRING_DATASOURCE_USERNAME=postgres
-#    - SPRING_DATASOURCE_PASSWORD=
-#
-#before_script:
-#  - psql -c "CREATE DATABASE service_finder;" -U postgres
+addons:
+  sonarcloud:
+    organization: "danbarcan-github" # the key of the org you chose at step #3
+    token:
+      secure: 38ed2cb43202d6ca37e6672fda30887fb040d339 # encrypted value of your token
+script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
