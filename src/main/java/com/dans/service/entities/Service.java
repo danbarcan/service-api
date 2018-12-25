@@ -1,15 +1,14 @@
 package com.dans.service.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -24,6 +23,9 @@ public class Service {
     private String name;
 
     @NotBlank
+    private String password;
+
+    @NotBlank
     private String address;
 
     private Double rating;
@@ -34,7 +36,7 @@ public class Service {
     @NotBlank
     private String phoneNumber;
 
-    @NotBlank
+    @NotNull
     private Long cui;
 
     @OneToMany(

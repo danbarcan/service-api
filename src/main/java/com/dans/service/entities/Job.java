@@ -1,15 +1,14 @@
 package com.dans.service.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -23,12 +22,12 @@ public class Job {
     @NotBlank
     private String description;
 
+    @NotNull
     private PartsType partsType;
 
     @NotBlank
     private String mail;
 
-    @NotBlank
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id")
     private Service acceptedService;
@@ -36,10 +35,10 @@ public class Job {
     @NotBlank
     private String location;
 
-    @NotBlank
+    @NotNull
     private Timestamp timestamp;
 
-    @NotBlank
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

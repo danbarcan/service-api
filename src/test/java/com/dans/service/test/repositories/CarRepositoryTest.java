@@ -3,7 +3,6 @@ package com.dans.service.test.repositories;
 import com.dans.service.entities.Car;
 import com.dans.service.entities.User;
 import com.dans.service.repositories.CarRepository;
-import com.dans.service.repositories.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +17,6 @@ import java.util.Optional;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class CarRepositoryTest {
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private TestEntityManager entityManager;
