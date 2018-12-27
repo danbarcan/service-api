@@ -3,6 +3,8 @@ package com.dans.service.test.controllers;
 import com.dans.service.controllers.AuthController;
 import com.dans.service.entities.User;
 import com.dans.service.payloads.ApiResponse;
+import com.dans.service.payloads.JwtAuthenticationResponse;
+import com.dans.service.payloads.LoginPayload;
 import com.dans.service.payloads.SignUpPayload;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.JwtTokenProvider;
@@ -55,6 +57,8 @@ public class AuthControllerTest {
 
     private SignUpPayload signUpPayload = new SignUpPayload("test", "test", "test", "test");
 
+    private LoginPayload loginPayload = new LoginPayload("test@test.com", "password");
+
     @Before
     public void setUp() {
         authController = new AuthController(authenticationManager, tokenProvider, passwordEncoder, userRepository);
@@ -75,7 +79,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void signUpExistingUserResponseSuccessful() {
+    public void signUpUserResponseSuccessful() {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/Car/{usernameOrEmail}")
@@ -88,4 +92,9 @@ public class AuthControllerTest {
                         .body(new ApiResponse(true, "User registered successfully"))));
     }
 
+    @Test
+    public void signInUserResponseSuccessful() {
+        Assert.assertThat(authController.authenticateUser(loginPayload),
+                Is.is(ResponseEntity.ok(new JwtAuthenticationResponse(null))));
+    }
 }
