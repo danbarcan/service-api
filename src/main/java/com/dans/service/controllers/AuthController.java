@@ -25,17 +25,19 @@ import java.net.URI;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
+    private JwtTokenProvider tokenProvider;
+    private PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
 
     @Autowired
-    JwtTokenProvider tokenProvider;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    UserRepository userRepository;
+    public AuthController(final AuthenticationManager authenticationManager, final JwtTokenProvider jwtTokenProvider,
+                          final PasswordEncoder passwordEncoder, final UserRepository userRepository) {
+        this.authenticationManager = authenticationManager;
+        this.tokenProvider = jwtTokenProvider;
+        this.passwordEncoder = passwordEncoder;
+        this.userRepository = userRepository;
+    }
 
 
     @GetMapping("/hello")
@@ -62,7 +64,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody SignUpPayload signUpPayload) {
         if (userRepository.existsByEmail(signUpPayload.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
+            return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
 

@@ -1,5 +1,6 @@
 package com.dans.service.payloads;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -7,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
+@AllArgsConstructor
 public class SignUpPayload {
     @NotBlank
     @Size(min = 4, max = 40)

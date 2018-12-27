@@ -22,8 +22,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private CustomUserDetailsService customUserDetailsService;
+
     @Autowired
-    CustomUserDetailsService customUserDetailsService;
+    public SecurityConfig(final CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
