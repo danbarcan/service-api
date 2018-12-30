@@ -8,7 +8,6 @@ import com.dans.service.payloads.LoginPayload;
 import com.dans.service.payloads.SignUpPayload;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.JwtTokenProvider;
-import io.swagger.annotations.Api;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -24,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -50,12 +47,12 @@ public class AuthControllerTest {
 
     private User user = User.builder().email("test@test.com")
             .password("password")
-            .firstName("test")
-            .lastName("test")
+            .name("test")
+            .username("test")
             .phoneNumber("07test")
             .build();
 
-    private SignUpPayload signUpPayload = new SignUpPayload("test", "test", "test", "test");
+    private SignUpPayload signUpPayload = new SignUpPayload("test", "test", "test", "test", "test");
 
     private LoginPayload loginPayload = new LoginPayload("test@test.com", "password");
 

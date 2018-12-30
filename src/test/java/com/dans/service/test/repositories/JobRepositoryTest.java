@@ -29,8 +29,8 @@ public class JobRepositoryTest {
 
     private User user = User.builder().email("test@test.com")
             .password("password")
-            .firstName("test")
-            .lastName("test")
+            .name("test")
+            .username("test")
             .phoneNumber("07test")
             .build();
 

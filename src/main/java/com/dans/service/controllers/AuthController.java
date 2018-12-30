@@ -71,9 +71,9 @@ public class AuthController {
         // Creating user's account
         User user = User.builder()
                 .email(signUpPayload.getEmail())
-                .firstName(signUpPayload.getName())
+                .name(signUpPayload.getName())
                 .password(signUpPayload.getPassword())
-                .lastName(signUpPayload.getName())
+                .username(signUpPayload.getUsername())
                 .phoneNumber(signUpPayload.getEmail())
                 .build();
 

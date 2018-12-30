@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class SignUpPayload {
     @NotBlank
-    @Size(min = 4, max = 40)
+    @Size(min = 3, max = 40)
     private String name;
 
     @NotBlank
@@ -22,6 +22,10 @@ public class SignUpPayload {
     @Size(max = 40)
     @Email
     private String email;
+
+    @NotBlank
+    @Size(min = 10, max = 15)
+    private String phone;
 
     @NotBlank
     @Size(min = 6, max = 20)
