@@ -78,7 +78,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void signUpExistingUserResponseBadRequest() throws Exception {
+    public void signUpExistingUserResponseBadRequest() {
 
         BDDMockito.given(this.userRepository.existsByEmail(BDDMockito.any(String.class))).willReturn(true);
         Assert.assertThat(authController.registerUser(signUpPayload),
@@ -87,7 +87,7 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void signUpUserResponseSuccessful() throws Exception {
+    public void signUpUserResponseSuccessful() {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/Car/{usernameOrEmail}")
