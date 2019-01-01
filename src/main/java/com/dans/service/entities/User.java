@@ -48,6 +48,10 @@ public class User {
 
     private Double rating;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.PERSIST)
+    @JoinColumn(name = "service_details_id")
+    private ServiceDetails serviceDetails;
+
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -63,6 +67,14 @@ public class User {
             fetch = FetchType.LAZY
     )
     private List<Job> jobs;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private List<Offer> offers;
 
     @OneToMany(
             mappedBy = "user",

@@ -22,7 +22,7 @@ public class Review {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id")
-    protected Service service;
+    protected User service;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

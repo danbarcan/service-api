@@ -30,7 +30,7 @@ public class Job {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id")
-    private Service acceptedService;
+    private User acceptedService;
 
     @NotBlank
     private String location;

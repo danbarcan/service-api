@@ -30,4 +30,10 @@ public class SignUpPayload {
     @NotBlank
     @Size(min = 6, max = 20)
     private String password;
+
+    private String serviceName;
+
+    private String serviceAddress;
+
+    private String cui;
 }

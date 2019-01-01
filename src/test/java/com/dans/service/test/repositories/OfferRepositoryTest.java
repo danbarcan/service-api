@@ -1,7 +1,8 @@
 package com.dans.service.test.repositories;
 
 import com.dans.service.entities.Offer;
-import com.dans.service.entities.Service;
+import com.dans.service.entities.ServiceDetails;
+import com.dans.service.entities.User;
 import com.dans.service.repositories.OfferRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -26,17 +27,15 @@ public class OfferRepositoryTest {
     @Autowired
     private OfferRepository offerRepository;
 
-    private Service service = Service.builder()
-            .mail("test@test.com")
+    private User user = User.builder().email("test@test.com")
             .password("password")
-            .address("test")
-            .cui(111L)
+            .name("test")
+            .username("test")
             .phoneNumber("07test")
-            .name("Service")
             .build();
 
     private Offer offer = Offer.builder()
-            .service(service)
+            .user(user)
             .duration(20L)
             .accepted(false)
             .timestamp(Timestamp.from(Instant.now()))
@@ -44,7 +43,7 @@ public class OfferRepositoryTest {
 
     @Test
     public void findAllShouldReturnOffers() {
-        this.entityManager.persist(service);
+        this.entityManager.persist(user);
         this.entityManager.persist(offer);
         List<Offer> offers = offerRepository.findAll();
         Assertions.assertThat(offers != null && offers.size() == 1).isTrue();
@@ -58,7 +57,7 @@ public class OfferRepositoryTest {
 
     @Test
     public void findByIdShouldReturnOffer() {
-        this.entityManager.persist(service);
+        this.entityManager.persist(user);
         this.entityManager.persist(offer);
         List<Offer> offers = this.offerRepository.findAll();
         Offer offer1 = offers.get(0);

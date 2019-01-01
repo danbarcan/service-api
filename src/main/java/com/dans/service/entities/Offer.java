@@ -20,8 +20,8 @@ public class Offer {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_id")
-    private Service service;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private Double cost;
 

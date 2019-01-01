@@ -32,14 +32,14 @@ public class UserRepositoryTest {
     @Test
     public void findByUsernameWhenNoUserShouldReturnNull() {
         this.entityManager.persist(this.user);
-        Optional<User> user = this.userRepository.findByEmail("mmouse");
+        Optional<User> user = this.userRepository.findByEmailOrUsername("mmouse", "mmouse");
         Assertions.assertThat(user.isPresent()).isFalse();
     }
 
     @Test
     public void findByUsernameShouldReturnUser() {
         this.entityManager.persist(this.user);
-        Optional<User> user = this.userRepository.findByEmail(this.user.getEmail());
+        Optional<User> user = this.userRepository.findByEmailOrUsername(this.user.getEmail(), this.user.getUsername());
         Assertions.assertThat(user.isPresent()).isTrue();
         Assertions.assertThat(user.get().equals(this.user)).isTrue();
     }

@@ -1,7 +1,7 @@
 package com.dans.service.test.repositories;
 
 import com.dans.service.entities.Review;
-import com.dans.service.entities.Service;
+import com.dans.service.entities.ServiceDetails;
 import com.dans.service.entities.User;
 import com.dans.service.repositories.ReviewRepository;
 import org.assertj.core.api.Assertions;
@@ -27,13 +27,18 @@ public class ReviewRepositoryTest {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    private Service service = Service.builder()
-            .mail("test@test.com")
-            .password("password")
+    private ServiceDetails serviceDetails = ServiceDetails.builder()
             .address("test")
             .cui(111L)
+            .name("ServiceDetails")
+            .build();
+
+    private User service = User.builder().email("service@test.com")
+            .password("password")
+            .name("test")
+            .username("service")
             .phoneNumber("07test")
-            .name("Service")
+            .serviceDetails(serviceDetails)
             .build();
 
     private User user = User.builder().email("test@test.com")
