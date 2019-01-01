@@ -4,12 +4,12 @@ import com.dans.service.entities.Role;
 import com.dans.service.entities.RoleName;
 import com.dans.service.entities.ServiceDetails;
 import com.dans.service.entities.User;
+import com.dans.service.exception.AppException;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JwtAuthenticationResponse;
 import com.dans.service.payloads.LoginPayload;
 import com.dans.service.payloads.SignUpPayload;
 import com.dans.service.repositories.RoleRepository;
-import com.dans.service.repositories.ServiceDetailsRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class AuthController {
         this.tokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;;
+        this.roleRepository = roleRepository;
     }
 
 
@@ -72,14 +72,14 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody SignUpPayload signUpPayload) throws Exception {
+    public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody SignUpPayload signUpPayload) throws AppException {
         if (userRepository.existsByEmail(signUpPayload.getEmail())) {
             return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
 
         if (userRepository.existsByUsername(signUpPayload.getUsername())) {
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
+            return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -100,7 +100,7 @@ public class AuthController {
                 !StringUtils.isEmpty(signUpPayload.getServiceAddress()) &&
                 !StringUtils.isEmpty(signUpPayload.getCui())) {
             userRole = roleRepository.findByName(RoleName.ROLE_SERVICE)
-                    .orElseThrow(() -> new Exception("User Role not set."));
+                    .orElseThrow(() -> new AppException("User Role not set."));
             ServiceDetails serviceDetails = ServiceDetails.builder()
                     .name(signUpPayload.getServiceName())
                     .address(signUpPayload.getServiceAddress())
@@ -109,7 +109,7 @@ public class AuthController {
             user.setServiceDetails(serviceDetails);
         } else {
             userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                    .orElseThrow(() -> new Exception("User Role not set."));
+                    .orElseThrow(() -> new AppException("User Role not set."));
         }
 
         user.setRoles(Collections.singleton(userRole));
