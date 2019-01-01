@@ -3,6 +3,7 @@ package com.dans.service.test.controllers;
 import com.dans.service.controllers.AuthController;
 import com.dans.service.entities.Role;
 import com.dans.service.entities.RoleName;
+import com.dans.service.entities.ServiceDetails;
 import com.dans.service.entities.User;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JwtAuthenticationResponse;
@@ -53,6 +54,20 @@ public class AuthControllerTest {
     @Mock
     private RoleRepository roleRepository;
 
+    private ServiceDetails serviceDetails = ServiceDetails.builder()
+            .address("test")
+            .cui(111L)
+            .name("ServiceDetails")
+            .build();
+
+    private User service = User.builder().email("service@test.com")
+            .password("password")
+            .name("test")
+            .username("service")
+            .phoneNumber("07test")
+            .serviceDetails(serviceDetails)
+            .build();
+
     private User user = User.builder().email("test@test.com")
             .password("password")
             .name("test")
@@ -78,11 +93,21 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void signUpExistingUserResponseBadRequest() {
+    public void signUpExistingUserMailResponseBadRequest() {
 
         BDDMockito.given(this.userRepository.existsByEmail(BDDMockito.any(String.class))).willReturn(true);
         Assert.assertThat(authController.registerUser(signUpPayload),
                 Is.is(new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
+                        HttpStatus.BAD_REQUEST)));
+    }
+
+    @Test
+    public void signUpExistingUsernameResponseBadRequest() {
+
+        BDDMockito.given(this.userRepository.existsByEmail(BDDMockito.any(String.class))).willReturn(false);
+        BDDMockito.given(this.userRepository.existsByUsername(BDDMockito.any(String.class))).willReturn(true);
+        Assert.assertThat(authController.registerUser(signUpPayload),
+                Is.is(new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
                         HttpStatus.BAD_REQUEST)));
     }
 
@@ -95,14 +120,29 @@ public class AuthControllerTest {
 
         BDDMockito.given(this.userRepository.existsByEmail(BDDMockito.any(String.class))).willReturn(false);
         BDDMockito.given(this.userRepository.save(BDDMockito.any(User.class))).willReturn(this.user);
-        BDDMockito.given(this.roleRepository.findByName(BDDMockito.any(RoleName.class))).willReturn(Optional.ofNullable(this.roleUser));
+        BDDMockito.given(this.roleRepository.findByName(RoleName.ROLE_USER)).willReturn(Optional.ofNullable(this.roleUser));
         Assert.assertThat(authController.registerUser(signUpPayload),
                 Is.is(ResponseEntity.created(location)
                         .body(new ApiResponse(true, "User registered successfully"))));
     }
 
     @Test
-    public void signInUserResponseSuccessful() {
+    public void signUpServiceResponseSuccessful() {
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/Car/{usernameOrEmail}")
+                .buildAndExpand(service.getEmail()).toUri();
+
+        BDDMockito.given(this.userRepository.existsByEmail(BDDMockito.any(String.class))).willReturn(false);
+        BDDMockito.given(this.userRepository.save(BDDMockito.any(User.class))).willReturn(this.service);
+        BDDMockito.given(this.roleRepository.findByName(RoleName.ROLE_SERVICE)).willReturn(Optional.ofNullable(this.roleService));
+        Assert.assertThat(authController.registerUser(signUpPayload),
+                Is.is(ResponseEntity.created(location)
+                        .body(new ApiResponse(true, "User registered successfully"))));
+    }
+
+    @Test
+    public void signInUserResponseNull() {
         Assert.assertThat(authController.authenticateUser(loginPayload),
                 Is.is(ResponseEntity.ok(new JwtAuthenticationResponse(null))));
     }
