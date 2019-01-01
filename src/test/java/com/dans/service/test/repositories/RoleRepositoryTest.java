@@ -23,21 +23,28 @@ public class RoleRepositoryTest {
     @Autowired
     private RoleRepository roleRepository;
 
-    private Role role = Role.builder().name(RoleName.ROLE_USER).build();
-
+    private Role roleUser = Role.builder().name(RoleName.ROLE_USER).build();
+    private Role roleService = Role.builder().name(RoleName.ROLE_SERVICE).build();
+    private Role roleAdmin = Role.builder().name(RoleName.ROLE_ADMIN).build();
 
     @Test
-    public void existsByEmailWhenNoUserShouldReturnFalse() {
-        this.entityManager.persist(this.role);
-        Optional<Role> role = this.roleRepository.findByName(RoleName.ROLE_ADMIN);
+    public void findByNameShouldReturnNull() {
+        Optional<Role> role = this.roleRepository.findByName(RoleName.ROLE_TEST);
         Assertions.assertThat(role.isPresent()).isFalse();
     }
 
     @Test
     public void existsByEmailShouldReturnTrue() {
-        this.entityManager.persist(this.role);
-        Optional<Role> role = this.roleRepository.findByName(this.role.getName());
+        Optional<Role> role = this.roleRepository.findByName(RoleName.ROLE_USER);
         Assertions.assertThat(role.isPresent()).isTrue();
-        Assertions.assertThat(this.role.equals(role.get())).isTrue();
+        Assertions.assertThat(this.roleUser.getName().equals(role.get().getName())).isTrue();
+
+        role = this.roleRepository.findByName(RoleName.ROLE_ADMIN);
+        Assertions.assertThat(role.isPresent()).isTrue();
+        Assertions.assertThat(this.roleAdmin.getName().equals(role.get().getName())).isTrue();
+
+        role = this.roleRepository.findByName(RoleName.ROLE_SERVICE);
+        Assertions.assertThat(role.isPresent()).isTrue();
+        Assertions.assertThat(this.roleService.getName().equals(role.get().getName())).isTrue();
     }
 }

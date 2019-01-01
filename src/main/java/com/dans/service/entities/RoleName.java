@@ -6,5 +6,6 @@ package com.dans.service.entities;
 public enum  RoleName {
     ROLE_USER,
     ROLE_SERVICE,
-    ROLE_ADMIN
+    ROLE_ADMIN,
+    ROLE_TEST
 }
