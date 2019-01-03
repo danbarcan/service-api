@@ -40,7 +40,6 @@ public class JobRepositoryTest {
             .location("location")
             .partsType(PartsType.NEW)
             .timestamp(Timestamp.from(Instant.now()))
-            .mail("email@email.com")
             .build();
 
     @Test

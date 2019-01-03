@@ -24,8 +24,8 @@ public class UserControllerTest {
 
     @Test
     public void getCurrentUserReturnsOk() {
-        UserPrincipal currentUser = new UserPrincipal(1L, "test@test.com", "password");
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getUsername());
+        UserPrincipal currentUser = new UserPrincipal(1L, "test@test.com", "password", "test", null);
+        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getUsername(), "ROLE_USER");
 
         Assert.assertThat(userController.getCurrentUser(currentUser), Is.is(userSummary));
     }

@@ -25,9 +25,6 @@ public class Job {
     @NotNull
     private PartsType partsType;
 
-    @NotBlank
-    private String mail;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id")
     private User acceptedService;
