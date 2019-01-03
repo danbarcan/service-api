@@ -26,7 +26,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Collections;
 
 @RestController
 @RequestMapping("/auth")
@@ -112,7 +111,7 @@ public class AuthController {
                     .orElseThrow(() -> new AppException("User Role not set."));
         }
 
-        user.setRoles(Collections.singleton(userRole));
+        user.setRole(userRole);
 
         User result = userRepository.save(user);
 

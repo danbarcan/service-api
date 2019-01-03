@@ -1,6 +1,8 @@
 package com.dans.service.controllers;
 
-import com.dans.service.entities.*;
+import com.dans.service.entities.Job;
+import com.dans.service.entities.PartsType;
+import com.dans.service.entities.User;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JobPayload;
 import com.dans.service.repositories.JobRepository;
@@ -16,13 +18,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class JobController {
@@ -43,14 +44,14 @@ public class JobController {
     public ResponseEntity<ApiResponse> saveJob(@Valid @RequestBody JobPayload jobPayload) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
+        Optional<User> user = userRepository.findById(((UserPrincipal) auth.getPrincipal()).getId());
 
         Job job = Job.builder()
                 .description(jobPayload.getDescription())
                 .partsType(PartsType.NEW)
                 .location(StringUtils.isEmpty(jobPayload.getLocation()) ? "location" : jobPayload.getLocation()) //TODO remove this mock location
                 .timestamp(Timestamp.from(Instant.now()))
-                .user(userRepository.findById(((UserPrincipal)auth.getPrincipal()).getId()).get())
+                .user(user.isPresent() ? user.get() : null)
                 .build();
 
         jobRepository.save(job);

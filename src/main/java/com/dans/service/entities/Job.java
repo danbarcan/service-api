@@ -25,7 +25,7 @@ public class Job {
     @NotNull
     private PartsType partsType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "service_id")
     private User acceptedService;
 
@@ -36,7 +36,7 @@ public class Job {
     private Timestamp timestamp;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 }

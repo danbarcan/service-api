@@ -1,6 +1,9 @@
 package com.dans.service.test.controllers;
 
 import com.dans.service.controllers.UserController;
+import com.dans.service.entities.Role;
+import com.dans.service.entities.RoleName;
+import com.dans.service.entities.User;
 import com.dans.service.payloads.UserSummary;
 import com.dans.service.security.UserPrincipal;
 import org.hamcrest.core.Is;
@@ -22,10 +25,18 @@ public class UserControllerTest {
     @InjectMocks
     private UserController userController;
 
+    private User user = User.builder().email("test@test.com")
+            .password("password")
+            .name("test")
+            .username("test")
+            .phoneNumber("07test")
+            .role(Role.builder().name(RoleName.ROLE_USER).build())
+            .build();
+
     @Test
     public void getCurrentUserReturnsOk() {
-        UserPrincipal currentUser = new UserPrincipal(1L, "test@test.com", "password", "test", null);
-        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getUsername(), "ROLE_USER");
+        UserPrincipal currentUser = UserPrincipal.create(user);
+        UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getUsername(), currentUser.getAuthorities().iterator().next().getAuthority());
 
         Assert.assertThat(userController.getCurrentUser(currentUser), Is.is(userSummary));
     }
