@@ -60,6 +60,7 @@ public class JobController {
     }
 
     @GetMapping("/services/jobs")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<Job>> getAllJobs() {
         return ResponseEntity.ok(jobRepository.findAll());
     }

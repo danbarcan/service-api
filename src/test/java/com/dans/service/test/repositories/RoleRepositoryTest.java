@@ -18,9 +18,6 @@ import java.util.Optional;
 public class RoleRepositoryTest {
 
     @Autowired
-    private TestEntityManager entityManager;
-
-    @Autowired
     private RoleRepository roleRepository;
 
     private Role roleUser = Role.builder().name(RoleName.ROLE_USER).build();

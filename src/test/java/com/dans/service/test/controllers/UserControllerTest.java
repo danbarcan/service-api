@@ -4,25 +4,30 @@ import com.dans.service.controllers.UserController;
 import com.dans.service.entities.Role;
 import com.dans.service.entities.RoleName;
 import com.dans.service.entities.User;
+import com.dans.service.payloads.UserIdentityAvailability;
 import com.dans.service.payloads.UserSummary;
 import com.dans.service.security.UserPrincipal;
+import com.dans.service.services.UserService;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class UserControllerTest {
 
-    @InjectMocks
+    @Mock
+    private UserService userService;
+
     private UserController userController;
 
     private User user = User.builder().email("test@test.com")
@@ -33,11 +38,50 @@ public class UserControllerTest {
             .role(Role.builder().name(RoleName.ROLE_USER).build())
             .build();
 
+    @Before
+    public void setUp() {
+        userController = new UserController(userService);
+    }
+
     @Test
     public void getCurrentUserReturnsOk() {
         UserPrincipal currentUser = UserPrincipal.create(user);
         UserSummary userSummary = new UserSummary(currentUser.getId(), currentUser.getUsername(), currentUser.getUsername(), currentUser.getAuthorities().iterator().next().getAuthority());
 
+        BDDMockito.given(this.userService.getCurrentUser(currentUser)).willReturn(userSummary);
         Assert.assertThat(userController.getCurrentUser(currentUser), Is.is(userSummary));
     }
+
+    @Test
+    public void checkUsernameAvailabilityReturnTrue() {
+        String username = "test";
+
+        BDDMockito.given(this.userService.checkUsernameAvailability(username)).willReturn(true);
+        Assert.assertThat(userController.checkUsernameAvailability(username), Is.is(new UserIdentityAvailability(true)));
+    }
+
+    @Test
+    public void checkUsernameAvailabilityReturnFalse() {
+        String username = "test";
+
+        BDDMockito.given(this.userService.checkUsernameAvailability(username)).willReturn(false);
+        Assert.assertThat(userController.checkUsernameAvailability(username), Is.is(new UserIdentityAvailability(false)));
+    }
+
+    @Test
+    public void checkEmailAvailabilityReturnTrue() {
+        String email = "email@test.com";
+
+        BDDMockito.given(this.userService.checkEmailAvailability(email)).willReturn(true);
+        Assert.assertThat(userController.checkEmailAvailability(email), Is.is(new UserIdentityAvailability(true)));
+    }
+
+    @Test
+    public void checkEmailAvailabilityReturnFalse() {
+        String email = "email@test.com";
+
+        BDDMockito.given(this.userService.checkEmailAvailability(email)).willReturn(false);
+        Assert.assertThat(userController.checkEmailAvailability(email), Is.is(new UserIdentityAvailability(false)));
+    }
+
 }
