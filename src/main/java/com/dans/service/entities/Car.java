@@ -1,5 +1,6 @@
 package com.dans.service.entities;
 
+import com.dans.service.payloads.CarPayload;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,12 +20,24 @@ public class Car {
     private Long id;
 
     @NotBlank
-    private String brand;
+    private String make;
 
-    private Long km;
+    @NotBlank
+    private String model;
+
+    private Integer year;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public static Car createCarFromPayload(CarPayload carPayload, User user) {
+        return Car.builder()
+                .make(carPayload.getMake())
+                .model(carPayload.getModel())
+                .year(Integer.parseInt(carPayload.getYear()))
+                .user(user)
+                .build();
+    }
 }

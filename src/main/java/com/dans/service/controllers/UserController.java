@@ -1,15 +1,17 @@
 package com.dans.service.controllers;
 
+import com.dans.service.entities.UserProfile;
 import com.dans.service.payloads.UserIdentityAvailability;
+import com.dans.service.payloads.UserProfilePayload;
 import com.dans.service.payloads.UserSummary;
 import com.dans.service.security.CurrentUser;
 import com.dans.service.security.UserPrincipal;
 import com.dans.service.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 public class UserController {
@@ -35,5 +37,15 @@ public class UserController {
     @GetMapping("/user/checkEmailAvailability")
     public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
         return new UserIdentityAvailability(userService.checkEmailAvailability(email));
+    }
+
+    @GetMapping("/user/profile")
+    public UserProfile getUserProfile() {
+        return userService.getUserDetails();
+    }
+
+    @PostMapping("/user/updateProfile")
+    public Boolean updateUserProfile(@Valid @RequestBody UserProfilePayload userProfilePayload) {
+        return userService.updateUserDetails(userProfilePayload);
     }
 }

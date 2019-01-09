@@ -79,4 +79,6 @@ public class UserServiceTest {
         BDDMockito.given(this.userRepository.existsByEmail(email)).willReturn(true);
         Assert.assertFalse(userService.checkEmailAvailability(email));
     }
+
+
 }

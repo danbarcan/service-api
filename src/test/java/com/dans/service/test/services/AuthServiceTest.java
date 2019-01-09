@@ -23,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -51,6 +52,9 @@ public class AuthServiceTest {
 
     @Mock
     private RoleRepository roleRepository;
+
+    @Mock
+    private Authentication authentication;
 
     private ServiceDetails serviceDetails = ServiceDetails.builder()
             .address("test")
@@ -141,5 +145,15 @@ public class AuthServiceTest {
     public void signInUserResponseNull() {
         Assert.assertThat(authService.authenticateUser(loginPayload),
                 Is.is(ResponseEntity.ok(new JwtAuthenticationResponse(null))));
+    }
+
+    @Test
+    public void signInUserResponseNotNull() {
+        String jwtToken = "token";
+        BDDMockito.given(this.authenticationManager.authenticate(BDDMockito.any())).willReturn(authentication);
+        BDDMockito.given(this.tokenProvider.generateToken(BDDMockito.any())).willReturn(jwtToken);
+
+        Assert.assertThat(authService.authenticateUser(loginPayload),
+                Is.is(ResponseEntity.ok(new JwtAuthenticationResponse(jwtToken))));
     }
 }

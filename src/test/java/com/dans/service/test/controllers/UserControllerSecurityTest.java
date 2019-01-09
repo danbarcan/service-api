@@ -66,20 +66,17 @@ public class UserControllerSecurityTest {
 
     @Test
     public void getUserWithNoUserIsUnauthorized() throws Exception {
-
-        BDDMockito.given(this.userService.getCurrentUser(currentUser)).willReturn(userSummary);
-
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/me").accept(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder).andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
-    @Ignore("Until we figure out how to make the request with specified roles")
+    //@Ignore("Until we figure out how to make the request with specified roles")
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(username = "username", roles = "SERVICE")
     public void getUserWithRoleUserIsOk() throws Exception {
 
-        BDDMockito.given(this.userService.getCurrentUser(currentUser)).willReturn(userSummary);
+        //BDDMockito.given(this.userService.getCurrentUser(currentUser)).willReturn(userSummary);
 
         RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/me").accept(MediaType.APPLICATION_JSON);
 
