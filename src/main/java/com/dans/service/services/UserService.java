@@ -7,8 +7,6 @@ import com.dans.service.payloads.UserSummary;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +37,7 @@ public class UserService {
     }
 
     public Boolean updateUserDetails(UserProfilePayload userProfilePayload) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((UserPrincipal) auth.getPrincipal()).getId();
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = userRepository.findById(userProfilePayload.getId());
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -51,7 +47,7 @@ public class UserService {
             user.setUsername(userProfilePayload.getUsername());
             user.setPhoneNumber(userProfilePayload.getPhone());
 
-            user.setPassword(passwordEncoder.encode(userProfilePayload.getNewPassword()));
+            user.setPassword(passwordEncoder.encode(userProfilePayload.getPassword()));
 
             userRepository.save(user);
 
@@ -61,14 +57,9 @@ public class UserService {
         return false;
     }
 
-    public UserProfile getUserDetails() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> user = userRepository.findById(((UserPrincipal) auth.getPrincipal()).getId());
+    public UserProfile getUserDetails(Long id) {
+        Optional<User> user = userRepository.findById(id);
 
-        if (user.isPresent()) {
-            return UserProfile.createUserProfileFromUser(user.get());
-        }
-
-        return null;
+        return user.isPresent() ? UserProfile.createUserProfileFromUser(user.get()) : null;
     }
 }

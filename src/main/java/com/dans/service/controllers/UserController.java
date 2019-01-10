@@ -40,11 +40,13 @@ public class UserController {
     }
 
     @GetMapping("/user/profile")
-    public UserProfile getUserProfile() {
-        return userService.getUserDetails();
+    @PreAuthorize("authentication.id = id")
+    public UserProfile getUserProfile(@RequestParam Long id) {
+        return userService.getUserDetails(id);
     }
 
     @PostMapping("/user/updateProfile")
+    @PreAuthorize("authentication.id = userProfilePayload.id")
     public Boolean updateUserProfile(@Valid @RequestBody UserProfilePayload userProfilePayload) {
         return userService.updateUserDetails(userProfilePayload);
     }

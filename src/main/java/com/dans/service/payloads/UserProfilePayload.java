@@ -1,45 +1,27 @@
 package com.dans.service.payloads;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserProfilePayload {
-    @NotBlank
-    @Size(min = 3, max = 40)
-    private String name;
+@EqualsAndHashCode(callSuper = false)
+public class UserProfilePayload extends SignUpPayload {
 
     @NotBlank
-    @Size(min = 3, max = 15)
-    private String username;
-
-    @NotBlank
-    @Size(max = 40)
-    @Email
-    private String email;
-
-    @NotBlank
-    @Size(min = 10, max = 15)
-    private String phone;
+    private Long id;
 
     @NotBlank
     @Size(min = 6, max = 20)
     private String oldPassword;
 
-    @NotBlank
-    @Size(min = 6, max = 20)
-    private String newPassword;
-
-    private String serviceName;
-
-    private String serviceAddress;
-
-    private String cui;
+    @Builder(builderMethodName = "childBuilder")
+    public UserProfilePayload(String name, String username, String email, String phone, String password, String serviceName, String serviceAddress, String cui, Long id, String oldPassword) {
+        super(name, username, email, phone, password, serviceName, serviceAddress, cui);
+        this.id = id;
+        this.oldPassword = oldPassword;
+    }
 }

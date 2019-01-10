@@ -3,7 +3,8 @@ package com.dans.service.test.services;
 import com.dans.service.entities.Role;
 import com.dans.service.entities.RoleName;
 import com.dans.service.entities.User;
-import com.dans.service.payloads.UserIdentityAvailability;
+import com.dans.service.entities.UserProfile;
+import com.dans.service.payloads.UserProfilePayload;
 import com.dans.service.payloads.UserSummary;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.UserPrincipal;
@@ -19,6 +20,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UserServiceTest {
@@ -33,7 +36,7 @@ public class UserServiceTest {
 
     @Before
     public void setUp() {
-        userService = new UserService(userRepository,passwordEncoder);
+        userService = new UserService(userRepository, passwordEncoder);
     }
 
     private User user = User.builder().email("test@test.com")
@@ -42,6 +45,17 @@ public class UserServiceTest {
             .username("test")
             .phoneNumber("07test")
             .role(Role.builder().name(RoleName.ROLE_USER).build())
+            .build();
+
+    private UserProfilePayload userProfilePayload = UserProfilePayload.childBuilder()
+            .id(1L)
+            .cui("12345")
+            .email("test@test.com")
+            .name("test")
+            .oldPassword("oldpass")
+            .password("newpass")
+            .phone("0121212120")
+            .username("test")
             .build();
 
     @Test
@@ -84,5 +98,31 @@ public class UserServiceTest {
         Assert.assertFalse(userService.checkEmailAvailability(email));
     }
 
+    @Test
+    public void updateUserDetailsReturnsTrue() {
+        BDDMockito.given(this.userRepository.findById(BDDMockito.any())).willReturn(Optional.of(user));
 
+        Assert.assertTrue(userService.updateUserDetails(userProfilePayload));
+    }
+
+    @Test
+    public void updateUserDetailsReturnsFalse() {
+        BDDMockito.given(this.userRepository.findById(BDDMockito.any())).willReturn(Optional.empty());
+
+        Assert.assertFalse(userService.updateUserDetails(userProfilePayload));
+    }
+
+    @Test
+    public void getUserDetailsReturnsUserDetails() {
+        BDDMockito.given(this.userRepository.findById(BDDMockito.any())).willReturn(Optional.of(user));
+
+        Assert.assertThat(userService.getUserDetails(user.getId()), Is.is(UserProfile.createUserProfileFromUser(user)));
+    }
+
+    @Test
+    public void getUserDetailsReturnsNull() {
+        BDDMockito.given(this.userRepository.findById(BDDMockito.any())).willReturn(Optional.empty());
+
+        Assert.assertNull(userService.getUserDetails(user.getId()));
+    }
 }

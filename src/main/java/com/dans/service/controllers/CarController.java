@@ -28,7 +28,7 @@ public class CarController {
 
     @PostMapping("/users/car")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> saveJob(@Valid @RequestBody CarPayload carPayload) {
+    public ResponseEntity<ApiResponse> saveCar(@Valid @RequestBody CarPayload carPayload) {
         return carService.saveCar(carPayload);
     }
 
