@@ -32,8 +32,9 @@ public class CarRepositoryTest {
             .build();
 
     private Car car = Car.builder()
-            .brand("Mercedes")
-            .km(1000L)
+            .make("Mercedes")
+            .model("GLA")
+            .year(1000)
             .user(user)
             .build();
 
@@ -48,7 +49,7 @@ public class CarRepositoryTest {
     @Test
     public void findAllShouldReturnNull() {
         List<Car> cars = carRepository.findAll();
-        Assertions.assertThat(cars != null && cars.size() == 1).isFalse();
+        Assertions.assertThat(cars.size() == 0).isTrue();
     }
 
     @Test
@@ -66,5 +67,19 @@ public class CarRepositoryTest {
     public void findByIdShouldReturnNull() {
         Optional<Car> car = carRepository.findById(-1L);
         Assertions.assertThat(car.isPresent()).isFalse();
+    }
+
+    @Test
+    public void findByUserIdShouldReturnCars() {
+        this.entityManager.persist(user);
+        this.entityManager.persist(car);
+        List<Car> cars = carRepository.findAllByUserId(user.getId());
+        Assertions.assertThat(cars != null && cars.size() == 1).isTrue();
+    }
+
+    @Test
+    public void findByUserIdShouldReturnNull() {
+        List<Car> cars = carRepository.findAllByUserId(user.getId());
+        Assertions.assertThat(cars.size() == 0).isTrue();
     }
 }

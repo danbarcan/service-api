@@ -15,6 +15,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     List<Car> findAll();
 
-    @Query("select c from Car where c.user.id = :userId")
+    @Query("select c from Car c where c.user.id = :userId")
     List<Car> findAllByUserId(Long userId);
 }
