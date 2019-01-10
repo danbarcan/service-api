@@ -71,7 +71,7 @@ public class UserControllerSecurityTest {
         mockMvc.perform(requestBuilder).andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
-    //@Ignore("Until we figure out how to make the request with specified roles")
+    @Ignore("Until we figure out how to make the request with specified roles")
     @Test
     @WithMockUser(username = "username", roles = "SERVICE")
     public void getUserWithRoleUserIsOk() throws Exception {
