@@ -1,8 +1,6 @@
 package com.dans.service.test.controllers;
 
 import com.dans.service.controllers.AuthController;
-import com.dans.service.entities.Role;
-import com.dans.service.entities.RoleName;
 import com.dans.service.entities.ServiceDetails;
 import com.dans.service.entities.User;
 import com.dans.service.payloads.ApiResponse;
@@ -61,9 +59,6 @@ public class AuthControllerTest {
     private SignUpPayload signUpPayloadService = new SignUpPayload("test", "test", "test", "test", "test", "test", "test", "0");
 
     private LoginPayload loginPayload = new LoginPayload("test@test.com", "password");
-
-    private Role roleUser = Role.builder().name(RoleName.ROLE_USER).build();
-    private Role roleService = Role.builder().name(RoleName.ROLE_SERVICE).build();
 
     @Before
     public void setUp() {

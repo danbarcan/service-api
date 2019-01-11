@@ -25,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -81,6 +80,10 @@ public class AuthServiceTest {
 
     private SignUpPayload signUpPayloadService = new SignUpPayload("test", "test", "test", "test", "test", "test", "test", "0");
 
+    private SignUpPayload signUpPayloadServiceWithoutAddress = new SignUpPayload("test", "test", "test", "test", "test", "test", "", "0");
+
+    private SignUpPayload signUpPayloadServiceWithoutCui = new SignUpPayload("test", "test", "test", "test", "test", "test", "test", "");
+
     private LoginPayload loginPayload = new LoginPayload("test@test.com", "password");
 
     private Role roleUser = Role.builder().name(RoleName.ROLE_USER).build();
@@ -111,8 +114,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    @WithMockUser(roles="USER")
-    public void signUpUserResponseSuccessful() {
+    public void signUpUserAndServicesWithoutFullInfoAsUsersResponseSuccessful() {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{usernameOrEmail}")
@@ -122,6 +124,12 @@ public class AuthServiceTest {
         BDDMockito.given(this.userRepository.save(BDDMockito.any(User.class))).willReturn(this.user);
         BDDMockito.given(this.roleRepository.findByName(RoleName.ROLE_USER)).willReturn(Optional.ofNullable(this.roleUser));
         Assert.assertThat(authService.registerUser(signUpPayloadUser),
+                Is.is(ResponseEntity.created(location)
+                        .body(new ApiResponse(true, "User registered successfully"))));
+        Assert.assertThat(authService.registerUser(signUpPayloadServiceWithoutCui),
+                Is.is(ResponseEntity.created(location)
+                        .body(new ApiResponse(true, "User registered successfully"))));
+        Assert.assertThat(authService.registerUser(signUpPayloadServiceWithoutAddress),
                 Is.is(ResponseEntity.created(location)
                         .body(new ApiResponse(true, "User registered successfully"))));
     }
