@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @RunWith(SpringRunner.class)
@@ -53,6 +54,19 @@ public class CarServiceTest {
     }
 
     @Test
+    public void getAllReturnsListWithOneElement() {
+        BDDMockito.given(this.carRepository.findAllByUserId(user.getId())).willReturn(Arrays.asList(this.car));
+        Assert.assertNotNull(carService.getAllCarsForCurrentUser(user.getId()).getBody());
+        Assert.assertEquals(1, carService.getAllCarsForCurrentUser(user.getId()).getBody().size());
+        Assert.assertTrue(carService.getAllCarsForCurrentUser(user.getId()).getBody().contains(this.car));
+    }
+
+    @Test
+    public void getAllReturnsEmptyList() {
+        Assert.assertTrue(carService.getAllCarsForCurrentUser(user.getId()).getBody().isEmpty());
+    }
+
+    @Test
     public void saveCarFail() {
         Assert.assertThat(carService.saveCar(carPayload), Is.is(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "UNAUTHORIZED"))));
     }
@@ -70,15 +84,8 @@ public class CarServiceTest {
     }
 
     @Test
-    public void updateCarFailUnauthorized() {
-        BDDMockito.given(this.carRepository.findById(BDDMockito.anyLong())).willReturn(Optional.of(this.car));
-        Assert.assertThat(carService.updateCar(carPayload), Is.is(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "UNAUTHORIZED"))));
-    }
-
-    @Test
     public void updateCarSuccess() {
         BDDMockito.given(this.carRepository.findById(BDDMockito.anyLong())).willReturn(Optional.of(this.car));
-        BDDMockito.given(this.userRepository.findById(carPayload.getUserId())).willReturn(Optional.of(this.user));
 
         Assert.assertThat(carService.updateCar(carPayload), Is.is(ResponseEntity.ok(new ApiResponse(true, "Car updated"))));
     }

@@ -49,11 +49,7 @@ public class CarService {
         if (!carOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Car not found"));
         }
-        Optional<User> user = userRepository.findById(carPayload.getUserId());
 
-        if (!user.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "UNAUTHORIZED"));
-        }
         Car car = carOptional.get();
 
         car.updateFieldsWithPayloadData(carPayload);
