@@ -7,10 +7,7 @@ import com.dans.service.services.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -24,7 +21,12 @@ public class CarController {
     public CarController(final CarService carService) {
         this.carService = carService;
     }
-
+    
+    @GetMapping("/users/cars")
+    @PreAuthorize("hasRole('ROLE_SERVICE')")
+    public ResponseEntity<List<Car>> getAllCars(@RequestParam Long userId) {
+        return carService.getAllCarsForCurrentUser(userId);
+    }
 
     @PostMapping("/users/car")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -32,9 +34,9 @@ public class CarController {
         return carService.saveCar(carPayload);
     }
 
-    @GetMapping("/users/cars")
-    @PreAuthorize("hasRole('ROLE_SERVICE')")
-    public ResponseEntity<List<Car>> getAllCars() {
-        return carService.getAllCarsForCurrentUser();
+    @PostMapping("/users/updateCar")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ApiResponse> updateCar(@Valid @RequestBody CarPayload carPayload) {
+        return carService.updateCar(carPayload);
     }
 }

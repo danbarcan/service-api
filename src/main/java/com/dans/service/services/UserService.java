@@ -49,8 +49,6 @@ public class UserService {
 
             user.setPassword(passwordEncoder.encode(userProfilePayload.getPassword()));
 
-            userRepository.save(user);
-
             return true;
         }
 

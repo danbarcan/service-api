@@ -12,6 +12,8 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class CarPayload {
 
+    private Long id;
+
     @NotBlank
     private String make;
 

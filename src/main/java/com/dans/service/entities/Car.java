@@ -40,4 +40,12 @@ public class Car {
                 .user(user)
                 .build();
     }
+
+    public Car updateFieldsWithPayloadData(CarPayload carPayload) {
+        this.make = carPayload.getMake();
+        this.model = carPayload.getModel();
+        this.year = Integer.parseInt(carPayload.getYear());
+
+        return this;
+    }
 }
