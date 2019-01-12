@@ -25,7 +25,6 @@ public class JobController {
         this.jobService = jobService;
     }
 
-
     @PostMapping("/users/job")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> saveJob(@Valid @RequestBody JobPayload jobPayload) {
