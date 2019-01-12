@@ -4,7 +4,9 @@ import com.dans.service.controllers.UserController;
 import com.dans.service.entities.Role;
 import com.dans.service.entities.RoleName;
 import com.dans.service.entities.User;
+import com.dans.service.entities.UserProfile;
 import com.dans.service.payloads.UserIdentityAvailability;
+import com.dans.service.payloads.UserProfilePayload;
 import com.dans.service.payloads.UserSummary;
 import com.dans.service.security.UserPrincipal;
 import com.dans.service.services.UserService;
@@ -36,6 +38,12 @@ public class UserControllerTest {
             .phoneNumber("07test")
             .role(Role.builder().name(RoleName.ROLE_USER).build())
             .build();
+
+    @Mock
+    private UserProfile userProfile;
+
+    @Mock
+    private UserProfilePayload userProfilePayload;
 
     @Before
     public void setUp() {
@@ -81,6 +89,20 @@ public class UserControllerTest {
 
         BDDMockito.given(this.userService.checkEmailAvailability(email)).willReturn(false);
         Assert.assertThat(userController.checkEmailAvailability(email), Is.is(new UserIdentityAvailability(false)));
+    }
+
+    @Test
+    public void getUserProfile() {
+        BDDMockito.given(this.userService.getUserDetails(BDDMockito.anyLong())).willReturn(userProfile);
+
+        Assert.assertThat(this.userController.getUserProfile(1L), Is.is(userProfile));
+    }
+
+    @Test
+    public void updateUserProfile() {
+        BDDMockito.given(this.userService.updateUserDetails(BDDMockito.any(UserProfilePayload.class))).willReturn(true);
+
+        Assert.assertTrue(this.userController.updateUserProfile(userProfilePayload));
     }
 
 }
