@@ -23,7 +23,7 @@ public class CarController {
     }
     
     @GetMapping("/users/cars")
-    @PreAuthorize("hasRole('ROLE_SERVICE')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Car>> getAllCars(@RequestParam Long userId) {
         return carService.getAllCarsForCurrentUser(userId);
     }
