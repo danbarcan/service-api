@@ -50,6 +50,8 @@ public class JobService {
         Job job = jobOptional.get();
         job.updateFieldsWithPayloadData(jobPayload);
 
+        jobRepository.save(job);
+
         return ResponseEntity.ok(new ApiResponse(true, "Job successfully updated"));
     }
 

@@ -54,6 +54,8 @@ public class CarService {
 
         car.updateFieldsWithPayloadData(carPayload);
 
+        carRepository.save(car);
+
         return ResponseEntity.ok(new ApiResponse(true, "Car updated"));
     }
 }
