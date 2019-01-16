@@ -37,6 +37,8 @@ public class Offer {
     private Timestamp timestamp;
 
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id")
     private Job job;
 
     public static Offer createOfferFromPayload(OfferPayload offerPayload, User service, Job job) {
