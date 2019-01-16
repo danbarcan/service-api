@@ -1,10 +1,12 @@
 package com.dans.service.entities;
 
+import com.dans.service.payloads.OfferPayload;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -33,4 +35,25 @@ public class Offer {
 
     @NotNull
     private Timestamp timestamp;
+
+    @NotNull
+    private Job job;
+
+    public static Offer createOfferFromPayload(OfferPayload offerPayload, User service, Job job) {
+        return Offer.builder()
+                .accepted(false)
+                .cost(offerPayload.getCost())
+                .duration(Long.parseLong(offerPayload.getDuration()))
+                .job(job)
+                .timestamp(Timestamp.from(Instant.now()))
+                .user(service)
+                .build();
+    }
+
+    public Offer updateFieldsWithPayloadData(OfferPayload offerPayload) {
+        this.setCost(offerPayload.getCost());
+        this.setDuration(Long.parseLong(offerPayload.getDuration()));
+
+        return this;
+    }
 }

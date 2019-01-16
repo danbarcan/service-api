@@ -21,11 +21,17 @@ public class CarController {
     public CarController(final CarService carService) {
         this.carService = carService;
     }
-    
+
     @GetMapping("/users/cars")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Car>> getAllCars(@RequestParam Long userId) {
         return carService.getAllCarsForCurrentUser(userId);
+    }
+
+    @GetMapping("/users/deleteCar")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ApiResponse> deleteCar(@RequestParam Long userId) {
+        return carService.deleteCar(userId);
     }
 
     @PostMapping("/users/car")

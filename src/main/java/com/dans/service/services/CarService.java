@@ -58,4 +58,17 @@ public class CarService {
 
         return ResponseEntity.ok(new ApiResponse(true, "Car updated"));
     }
+
+    public ResponseEntity<ApiResponse> deleteCar(Long carId) {
+        Optional<Car> carOptional = carRepository.findById(carId);
+
+        if (!carOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Car not found"));
+        }
+
+        Car car = carOptional.get();
+        carRepository.delete(car);
+
+        return ResponseEntity.ok(new ApiResponse(true, "Car deleted"));
+    }
 }

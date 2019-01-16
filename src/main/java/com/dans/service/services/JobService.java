@@ -55,6 +55,18 @@ public class JobService {
         return ResponseEntity.ok(new ApiResponse(true, "Job successfully updated"));
     }
 
+    public ResponseEntity<ApiResponse> deleteJob(Long jobId) {
+        Optional<Job> jobOptional = jobRepository.findById(jobId);
+        if (!jobOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Job not found"));
+        }
+
+        Job job = jobOptional.get();
+        jobRepository.delete(job);
+
+        return ResponseEntity.ok(new ApiResponse(true, "Job successfully deleted"));
+    }
+
     public ResponseEntity<List<Job>> getAllJobs() {
         return ResponseEntity.ok(jobRepository.findAll());
     }
