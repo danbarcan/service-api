@@ -30,8 +30,8 @@ public class CarController {
 
     @GetMapping("/users/deleteCar")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> deleteCar(@RequestParam Long userId) {
-        return carService.deleteCar(userId);
+    public ResponseEntity<ApiResponse> deleteCar(@RequestParam Long carId) {
+        return carService.deleteCar(carId);
     }
 
     @PostMapping("/users/car")
