@@ -53,7 +53,7 @@ public class JobServiceTest {
 
     @Test
     public void getAllReturnsListWithOneElement() {
-        BDDMockito.given(this.jobRepository.findAll()).willReturn(Arrays.asList(this.job));
+        BDDMockito.given(this.jobRepository.findAllByOrderByTimestampDesc()).willReturn(Arrays.asList(this.job));
         Assert.assertNotNull(jobService.getAllJobs().getBody());
         Assert.assertEquals(1, jobService.getAllJobs().getBody().size());
         Assert.assertTrue(jobService.getAllJobs().getBody().contains(this.job));
