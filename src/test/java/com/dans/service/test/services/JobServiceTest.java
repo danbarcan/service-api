@@ -7,6 +7,7 @@ import com.dans.service.payloads.JobPayload;
 import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.services.JobService;
+import com.dans.service.services.OfferService;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
@@ -35,9 +36,12 @@ public class JobServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private OfferService offerService;
+
     @Before
     public void setUp() {
-        this.jobService = new JobService(jobRepository, userRepository);
+        this.jobService = new JobService(jobRepository, userRepository, offerService);
     }
 
     private User user = User.builder().email("test@test.com")

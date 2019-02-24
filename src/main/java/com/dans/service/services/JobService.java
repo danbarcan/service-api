@@ -4,6 +4,7 @@ import com.dans.service.entities.Job;
 import com.dans.service.entities.User;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JobPayload;
+import com.dans.service.payloads.OfferPayload;
 import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,13 @@ public class JobService {
 
     private UserRepository userRepository;
 
+    private OfferService offerService;
+
     @Autowired
-    public JobService(final JobRepository jobRepository, final UserRepository userRepository) {
+    public JobService(final JobRepository jobRepository, final UserRepository userRepository, final OfferService offerService) {
         this.jobRepository = jobRepository;
         this.userRepository = userRepository;
+        this.offerService = offerService;
     }
 
     public ResponseEntity<ApiResponse> saveJob(JobPayload jobPayload) {
@@ -73,5 +77,10 @@ public class JobService {
 
     public ResponseEntity<List<Job>> getAllJobs(Long userId) {
         return ResponseEntity.ok(jobRepository.findAllByUserIdOrderByTimestampDesc(userId));
+    }
+
+    public ResponseEntity<ApiResponse> acceptJob(OfferPayload acceptJobPayload) {
+        //TODO: send mail to client
+        return offerService.saveOffer(acceptJobPayload);
     }
 }

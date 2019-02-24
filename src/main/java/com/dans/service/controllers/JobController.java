@@ -3,6 +3,7 @@ package com.dans.service.controllers;
 import com.dans.service.entities.Job;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JobPayload;
+import com.dans.service.payloads.OfferPayload;
 import com.dans.service.services.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +51,11 @@ public class JobController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Job>> getAllJobs(@RequestParam Long userId) {
         return jobService.getAllJobs(userId);
+    }
+
+    @GetMapping("/services/acceptJob")
+    @PreAuthorize("hasRole('ROLE_SERVICE')")
+    public ResponseEntity<ApiResponse> acceptJob(@Valid @RequestBody OfferPayload offerPayload) {
+        return jobService.acceptJob(offerPayload);
     }
 }
