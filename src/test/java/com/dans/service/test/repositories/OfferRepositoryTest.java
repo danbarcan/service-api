@@ -39,12 +39,20 @@ public class OfferRepositoryTest {
             .phoneNumber("07test")
             .build();
 
+    private Car car = Car.builder()
+            .make("Mercedes")
+            .model("GLA")
+            .year(1000)
+            .user(user)
+            .build();
+
     private Job job = Job.builder()
             .user(user)
             .description("description")
             .location("location")
             .partsType(PartsType.NEW)
             .timestamp(Timestamp.from(Instant.now()))
+            .car(car)
             .build();
 
     private Offer offer = Offer.builder()
@@ -53,12 +61,14 @@ public class OfferRepositoryTest {
             .accepted(false)
             .timestamp(Timestamp.from(Instant.now()))
             .job(job)
+            .description("description")
             .build();
 
     @Test
     public void findAllShouldReturnOffers() {
         this.entityManager.persist(user);
         this.entityManager.persist(service);
+        this.entityManager.persist(car);
         this.entityManager.persist(job);
         this.entityManager.persist(offer);
         List<Offer> offers = offerRepository.findAll();
@@ -75,6 +85,7 @@ public class OfferRepositoryTest {
     public void findByIdShouldReturnOffer() {
         this.entityManager.persist(user);
         this.entityManager.persist(service);
+        this.entityManager.persist(car);
         this.entityManager.persist(job);
         this.entityManager.persist(offer);
         List<Offer> offers = this.offerRepository.findAll();
