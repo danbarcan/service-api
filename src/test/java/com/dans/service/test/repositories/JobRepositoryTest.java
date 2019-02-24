@@ -1,5 +1,6 @@
 package com.dans.service.test.repositories;
 
+import com.dans.service.entities.Car;
 import com.dans.service.entities.Job;
 import com.dans.service.entities.PartsType;
 import com.dans.service.entities.User;
@@ -34,17 +35,26 @@ public class JobRepositoryTest {
             .phoneNumber("07test")
             .build();
 
+    private Car car = Car.builder()
+            .make("Mercedes")
+            .model("GLA")
+            .year(1000)
+            .user(user)
+            .build();
+
     private Job job = Job.builder()
             .user(user)
             .description("description")
             .location("location")
             .partsType(PartsType.NEW)
             .timestamp(Timestamp.from(Instant.now()))
+            .car(car)
             .build();
 
     @Test
     public void findAllShouldReturnJobs() {
         this.entityManager.persist(user);
+        this.entityManager.persist(car);
         this.entityManager.persist(job);
         List<Job> jobs = jobRepository.findAll();
         Assertions.assertThat(jobs != null && jobs.size() == 1).isTrue();
@@ -59,6 +69,7 @@ public class JobRepositoryTest {
     @Test
     public void findByIdShouldReturnJob() {
         this.entityManager.persist(user);
+        this.entityManager.persist(car);
         this.entityManager.persist(job);
         List<Job> jobs = this.jobRepository.findAll();
         Job job1 = jobs.get(0);
