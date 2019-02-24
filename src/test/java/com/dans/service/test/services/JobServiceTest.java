@@ -47,7 +47,7 @@ public class JobServiceTest {
             .phoneNumber("07test")
             .build();
 
-    private JobPayload jobPayload = new JobPayload(-1L, 1L, "test", "test", "2000", "test", "test");
+    private JobPayload jobPayload = new JobPayload(-1L, 1L, 1L, "test", "test");
 
     private Job job = Job.createJobFromJobPayload(jobPayload, user);
 

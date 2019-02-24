@@ -17,15 +17,8 @@ public class JobPayload {
     @NotNull
     private Long userId;
 
-    @NotBlank
-    private String make;
-
-    @NotBlank
-    private String model;
-
-    @NotBlank
-    @Size(min = 4, max = 4)
-    private String year;
+    @NotNull
+    private Long carId;
 
     @NotBlank
     private String description;

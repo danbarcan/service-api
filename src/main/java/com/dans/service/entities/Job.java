@@ -40,6 +40,11 @@ public class Job {
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "car_id")
+    private Car car;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

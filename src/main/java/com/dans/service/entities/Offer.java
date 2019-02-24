@@ -34,6 +34,9 @@ public class Offer {
     private Boolean accepted;
 
     @NotNull
+    private String description;
+
+    @NotNull
     private Timestamp timestamp;
 
     @NotNull

@@ -45,4 +45,10 @@ public class JobController {
     public ResponseEntity<List<Job>> getAllJobs() {
         return jobService.getAllJobs();
     }
+
+    @GetMapping("/users/jobs")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<List<Job>> getAllJobs(@RequestParam Long userId) {
+        return jobService.getAllJobs(userId);
+    }
 }

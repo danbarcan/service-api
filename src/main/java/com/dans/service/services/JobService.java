@@ -68,6 +68,10 @@ public class JobService {
     }
 
     public ResponseEntity<List<Job>> getAllJobs() {
-        return ResponseEntity.ok(jobRepository.findAll());
+        return ResponseEntity.ok(jobRepository.findAllByOrderByTimestampDesc());
+    }
+
+    public ResponseEntity<List<Job>> getAllJobs(Long userId) {
+        return ResponseEntity.ok(jobRepository.findAllByUserIdOrderByTimestampDesc(userId));
     }
 }

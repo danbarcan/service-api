@@ -22,6 +22,9 @@ public class OfferPayload {
     @NotBlank
     private String duration;
 
+    @NotBlank
+    private String description;
+
     @NotNull
     private Long jobId;
 
