@@ -38,6 +38,7 @@ public class Job {
     @NotNull
     private Timestamp timestamp;
 
+    @Transient
     private Car car;
 
     @NotNull
