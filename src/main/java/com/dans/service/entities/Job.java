@@ -38,8 +38,6 @@ public class Job {
     @NotNull
     private Timestamp timestamp;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "car_id")
     private Car car;
 
     @NotNull
