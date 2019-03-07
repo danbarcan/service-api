@@ -15,8 +15,7 @@ public class JobPayload {
 
     @NotNull
     private Long userId;
-
-    @NotNull
+    
     private Long carId;
 
     @NotBlank
