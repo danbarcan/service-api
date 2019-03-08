@@ -83,4 +83,13 @@ public class JobService {
         //TODO: send mail to client
         return offerService.saveOffer(acceptJobPayload);
     }
+
+    public ResponseEntity<Job> getJobById(Long jobId) {
+        Optional<Job> jobOptional = jobRepository.findById(jobId);
+        if (!jobOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.ok(jobOptional.get());
+    }
 }

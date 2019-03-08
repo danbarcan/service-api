@@ -46,9 +46,15 @@ public class OfferController {
         return offerService.acceptOffer(offerId);
     }
 
-    @GetMapping("/users/offers")
+    @GetMapping("/users/allOffers")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<Offer>> getAllJobs() {
         return offerService.getAllOffers();
+    }
+
+    @GetMapping("/users/offers")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<List<Offer>> getAllJobs(@RequestParam Long userId) {
+        return offerService.getAllOffersByUser(userId);
     }
 }

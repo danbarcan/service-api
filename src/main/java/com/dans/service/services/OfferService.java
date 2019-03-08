@@ -94,4 +94,14 @@ public class OfferService {
     public ResponseEntity<List<Offer>> getAllOffers() {
         return ResponseEntity.ok(offerRepository.findAll());
     }
+
+    public ResponseEntity<List<Offer>> getAllOffersByUser(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if (!user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        return ResponseEntity.ok(offerRepository.findAllByUser(user.get()));
+    }
 }

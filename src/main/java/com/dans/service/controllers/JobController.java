@@ -58,4 +58,10 @@ public class JobController {
     public ResponseEntity<ApiResponse> acceptJob(@Valid @RequestBody OfferPayload offerPayload) {
         return jobService.acceptJob(offerPayload);
     }
+
+    @GetMapping("/services/job")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Job> getJob(@RequestParam Long jobId) {
+        return jobService.getJobById(jobId);
+    }
 }

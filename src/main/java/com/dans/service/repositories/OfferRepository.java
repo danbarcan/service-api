@@ -1,6 +1,7 @@
 package com.dans.service.repositories;
 
 import com.dans.service.entities.Offer;
+import com.dans.service.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -12,4 +13,6 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     Optional<Offer> findById(Long id);
 
     List<Offer> findAll();
+
+    List<Offer> findAllByUser(User user);
 }
