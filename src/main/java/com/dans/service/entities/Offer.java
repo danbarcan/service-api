@@ -51,6 +51,7 @@ public class Offer {
                 .duration(Long.parseLong(offerPayload.getDuration()))
                 .job(job)
                 .timestamp(Timestamp.from(Instant.now()))
+                .description(offerPayload.getDescription())
                 .user(service)
                 .build();
     }
