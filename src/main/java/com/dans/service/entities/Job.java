@@ -1,6 +1,7 @@
 package com.dans.service.entities;
 
 import com.dans.service.payloads.JobPayload;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.util.StringUtils;
 
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Set;
 
 @Data
 @Builder
@@ -45,6 +47,10 @@ public class Job {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "job", cascade = CascadeType.REMOVE)
+    @EqualsAndHashCode.Exclude
+    private Set<Offer> offers;
 
     public static Job createJobFromJobPayload(JobPayload jobPayload, User user) {
         return Job.builder()

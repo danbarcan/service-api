@@ -1,6 +1,7 @@
 package com.dans.service.entities;
 
 import com.dans.service.payloads.OfferPayload;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,7 +22,7 @@ public class Offer {
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -40,8 +41,10 @@ public class Offer {
     private Timestamp timestamp;
 
     @NotNull
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
+    @EqualsAndHashCode.Exclude
     private Job job;
 
     public static Offer createOfferFromPayload(OfferPayload offerPayload, User service, Job job) {
