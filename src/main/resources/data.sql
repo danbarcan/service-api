@@ -13,15 +13,15 @@ INSERT INTO users(id, email, name, password, phone_number, rating, username, rol
 INSERT INTO cars(id, make, model, year, user_id) VALUES (-1, 'audi', 'a1', 2000, -1);
 INSERT INTO cars(id, make, model, year, user_id) VALUES (0, 'audi', 'a2', 2001, -1);
 
-INSERT INTO job(id, description, location, parts_type, "timestamp", service_id, user_id) VALUES (-1, 'stricat', 'in zona', 1, current_timestamp, null, -1);
-INSERT INTO job(id, description, location, parts_type, "timestamp", service_id, user_id) VALUES (-2, 'stricat1', 'in zona1', 1, current_timestamp, null, -1);
-INSERT INTO job(id, description, location, parts_type, "timestamp", service_id, user_id) VALUES (0, 'stricat2', 'in zona2', 1, current_timestamp, null, -1);
+INSERT INTO job(id, description, location, parts_type, service_id, user_id) VALUES (-1, 'stricat', 'in zona', 1, null, -1);
+INSERT INTO job(id, description, location, parts_type, service_id, user_id) VALUES (-2, 'stricat1', 'in zona1', 1, null, -1);
+INSERT INTO job(id, description, location, parts_type, service_id, user_id) VALUES (0, 'stricat2', 'in zona2', 1, null, -1);
 
-INSERT INTO offers(accepted, cost, description, duration, "timestamp", job_id, user_id)
-  VALUES (false, 100, 'repede si bine', 100, current_timestamp, -1, 0);
-INSERT INTO offers(accepted, cost, description, duration, "timestamp", job_id, user_id)
-  VALUES (false, 200, 'repede si mai bine', 100, current_timestamp, -2, 0);
-INSERT INTO offers(accepted, cost, description, duration, "timestamp", job_id, user_id)
-  VALUES (false, 300, 'repede si prost', 100, current_timestamp, -1, 0);
-INSERT INTO offers(accepted, cost, description, duration, "timestamp", job_id, user_id)
-  VALUES (false, 400, 'incet si prost', 200, current_timestamp, -0, 0);
+INSERT INTO offers(accepted, cost, description, duration, job_id, user_id)
+  VALUES (false, 100, 'repede si bine', 100, -1, 0);
+INSERT INTO offers(accepted, cost, description, duration, job_id, user_id)
+  VALUES (false, 200, 'repede si mai bine', 100, -2, 0);
+INSERT INTO offers(accepted, cost, description, duration, job_id, user_id)
+  VALUES (false, 300, 'repede si prost', 100, -1, 0);
+INSERT INTO offers(accepted, cost, description, duration, job_id, user_id)
+  VALUES (false, 400, 'incet si prost', 200, -0, 0);
