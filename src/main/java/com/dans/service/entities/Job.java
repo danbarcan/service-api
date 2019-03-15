@@ -38,7 +38,7 @@ public class Job {
     private String location;
 
     @NotNull
-    private Timestamp timestamp;
+    private Timestamp timestamp = Timestamp.from(Instant.now());
 
     @Transient
     private Car car;

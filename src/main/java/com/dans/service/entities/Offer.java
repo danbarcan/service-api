@@ -38,7 +38,7 @@ public class Offer {
     private String description;
 
     @NotNull
-    private Timestamp timestamp;
+    private Timestamp timestamp = Timestamp.from(Instant.now());
 
     @NotNull
     @JsonIgnore

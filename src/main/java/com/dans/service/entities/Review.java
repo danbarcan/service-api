@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -39,5 +40,5 @@ public class Review {
     protected Boolean byService;
 
     @NotNull
-    protected Timestamp timestamp;
+    private Timestamp timestamp = Timestamp.from(Instant.now());
 }
