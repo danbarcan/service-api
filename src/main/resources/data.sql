@@ -5,7 +5,7 @@ INSERT INTO roles(name) VALUES('ROLE_ADMIN');
 INSERT INTO users(id, email, name, password, phone_number, rating, username, role_id, service_details_id)
 	VALUES (-1, 'dan@dan.com', 'danut', '$2a$10$/S2JpiypueclFU3N.TuWle9BOwTOo5ydm/DoL8XHniNpRiTMwF22W', '1234567890', null, 'danut', 1, null);
 INSERT INTO users(id, email, name, password, phone_number, rating, username, role_id, service_details_id)
-	VALUES (-1, 'dan1@dan.com', 'danut1', '$2a$10$/S2JpiypueclFU3N.TuWle9BOwTOo5ydm/DoL8XHniNpRiTMwF22W', '1234567890', null, 'danut1', 1, null);
+	VALUES (-3, 'dan1@dan.com', 'danut1', '$2a$10$/S2JpiypueclFU3N.TuWle9BOwTOo5ydm/DoL8XHniNpRiTMwF22W', '1234567890', null, 'danut1', 1, null);
 
 INSERT INTO service_details(id, address, cui, name) VALUES (-1, 'p-aci', 123456, 'repara tot');
 INSERT INTO service_details(id, address, cui, name) VALUES (-2, 'p-aci2', 123456, 'repara tot2');
@@ -13,7 +13,7 @@ INSERT INTO service_details(id, address, cui, name) VALUES (-2, 'p-aci2', 123456
 INSERT INTO users(id, email, name, password, phone_number, rating, username, role_id, service_details_id)
 	VALUES (0, 'service@service.com', 'service', '$2a$10$/S2JpiypueclFU3N.TuWle9BOwTOo5ydm/DoL8XHniNpRiTMwF22W', '1234567891', null, 'service', 2, -1);
 INSERT INTO users(id, email, name, password, phone_number, rating, username, role_id, service_details_id)
-	VALUES (0, 'service1@service.com', 'service1', '$2a$10$/S2JpiypueclFU3N.TuWle9BOwTOo5ydm/DoL8XHniNpRiTMwF22W', '1234567891', null, 'service1', 2, -2);
+	VALUES (-2, 'service1@service.com', 'service1', '$2a$10$/S2JpiypueclFU3N.TuWle9BOwTOo5ydm/DoL8XHniNpRiTMwF22W', '1234567891', null, 'service1', 2, -2);
 
 INSERT INTO cars(id, make, model, year, user_id) VALUES (-1, 'audi', 'a1', 2000, -1);
 INSERT INTO cars(id, make, model, year, user_id) VALUES (0, 'audi', 'a2', 2001, -1);

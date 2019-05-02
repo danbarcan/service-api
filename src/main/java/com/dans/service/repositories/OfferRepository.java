@@ -1,5 +1,6 @@
 package com.dans.service.repositories;
 
+import com.dans.service.entities.Job;
 import com.dans.service.entities.Offer;
 import com.dans.service.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     List<Offer> findAll();
 
     List<Offer> findAllByUser(User user);
+
+    List<Offer> findAllByJob(Job job);
 }

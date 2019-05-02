@@ -73,8 +73,14 @@ public class OfferService {
 
         Offer offer = offerOptional.get();
         offer.setAccepted(true);
+        offer.getJob().setAcceptedService(offer.getUser());
 
         offerRepository.save(offer);
+
+        List<Offer> allOffersForJob = offerRepository.findAllByJob(offer.getJob());
+        allOffersForJob.remove(offer);
+
+        offerRepository.deleteAll(allOffersForJob);
 
         return ResponseEntity.ok(new ApiResponse(true, "Offer successfully accepted"));
     }
