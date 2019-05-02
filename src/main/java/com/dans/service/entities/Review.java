@@ -40,5 +40,6 @@ public class Review {
     protected Boolean byService;
 
     @NotNull
-    private Timestamp timestamp = Timestamp.from(Instant.now());
+    @Column(columnDefinition="Timestamp default current_timestamp")
+    private Timestamp timestamp;
 }

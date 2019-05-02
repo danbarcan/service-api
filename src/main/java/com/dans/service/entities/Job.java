@@ -38,7 +38,8 @@ public class Job {
     private String location;
 
     @NotNull
-    private Timestamp timestamp = Timestamp.from(Instant.now());
+    @Column(columnDefinition="Timestamp default current_timestamp")
+    private Timestamp timestamp;
 
     @Transient
     private Car car;
