@@ -53,6 +53,14 @@ public class Job {
     @EqualsAndHashCode.Exclude
     private Set<Offer> offers;
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "hidden_jobs",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    Set<User> hiddenForUsers;
+
     public static Job createJobFromJobPayload(JobPayload jobPayload, User user) {
         return Job.builder()
                 .description(jobPayload.getDescription())
@@ -69,5 +77,9 @@ public class Job {
         this.setTimestamp(Timestamp.from(Instant.now()));
 
         return this;
+    }
+
+    public void addUserToHiddenList(User user) {
+        this.hiddenForUsers.add(user);
     }
 }

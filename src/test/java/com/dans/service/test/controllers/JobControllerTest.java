@@ -4,6 +4,7 @@ import com.dans.service.controllers.JobController;
 import com.dans.service.entities.Job;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JobPayload;
+import com.dans.service.payloads.JobResponsePayload;
 import com.dans.service.services.JobService;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
@@ -51,7 +52,7 @@ public class JobControllerTest {
 
     @Test
     public void getAllJobs() {
-        BDDMockito.given(this.jobController.getAllJobs()).willReturn(ResponseEntity.ok(Arrays.asList(new Job())));
-        Assert.assertThat(jobController.getAllJobs(), Is.is(ResponseEntity.ok(Arrays.asList(new Job()))));
+        BDDMockito.given(this.jobController.getAllJobs()).willReturn(ResponseEntity.ok(Arrays.asList(new JobResponsePayload())));
+        Assert.assertThat(jobController.getAllJobs(), Is.is(ResponseEntity.ok(Arrays.asList(new JobResponsePayload()))));
     }
 }

@@ -3,6 +3,7 @@ package com.dans.service.controllers;
 import com.dans.service.entities.Job;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JobPayload;
+import com.dans.service.payloads.JobResponsePayload;
 import com.dans.service.payloads.OfferPayload;
 import com.dans.service.services.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +44,13 @@ public class JobController {
 
     @GetMapping("/services/jobs")
     @PreAuthorize("hasRole('ROLE_SERVICE')")
-    public ResponseEntity<List<Job>> getAllJobs() {
+    public ResponseEntity<List<JobResponsePayload>> getAllJobs() {
         return jobService.getAllJobs();
     }
 
     @GetMapping("/users/jobs")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<Job>> getAllJobs(@RequestParam Long userId) {
+    public ResponseEntity<List<JobResponsePayload>> getAllJobs(@RequestParam Long userId) {
         return jobService.getAllJobs(userId);
     }
 
@@ -63,5 +64,11 @@ public class JobController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Job> getJob(@RequestParam Long jobId) {
         return jobService.getJobById(jobId);
+    }
+
+    @GetMapping("/services/offers/hideJob")
+    @PreAuthorize("hasRole('ROLE_SERVICE')")
+    public ResponseEntity<ApiResponse> hideJob(@RequestParam Long jobId) {
+        return jobService.hideJob(jobId);
     }
 }

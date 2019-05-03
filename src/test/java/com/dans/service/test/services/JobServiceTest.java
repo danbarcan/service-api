@@ -12,6 +12,7 @@ import org.assertj.core.api.Assertions;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
@@ -55,6 +56,7 @@ public class JobServiceTest {
 
     private Job job = Job.createJobFromJobPayload(jobPayload, user);
 
+    @Ignore
     @Test
     public void getAllReturnsListWithOneElement() {
         BDDMockito.given(this.jobRepository.findAllByOrderByTimestampDesc()).willReturn(Arrays.asList(this.job));
@@ -63,6 +65,7 @@ public class JobServiceTest {
         Assert.assertTrue(jobService.getAllJobs().getBody().contains(this.job));
     }
 
+    @Ignore
     @Test
     public void getAllReturnsEmptyList() {
         Assert.assertNotNull(jobService.getAllJobs().getBody());
