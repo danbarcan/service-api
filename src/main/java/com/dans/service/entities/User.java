@@ -54,6 +54,7 @@ public class User {
     private ServiceDetails serviceDetails;
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -63,6 +64,7 @@ public class User {
     private List<Review> reviews;
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -72,6 +74,7 @@ public class User {
     private List<Job> jobs;
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -81,6 +84,7 @@ public class User {
     private List<Offer> offers;
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -94,6 +98,7 @@ public class User {
     private Role role;
 
     @JsonIgnore
+    @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "hiddenForUsers")
     Set<Job> hiddenJobs;
 }
