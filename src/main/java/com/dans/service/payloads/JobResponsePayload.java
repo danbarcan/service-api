@@ -36,7 +36,7 @@ public class JobResponsePayload {
 
     private Set<Offer> offers;
 
-    private boolean hiddenForCurrentUser;
+    private JobState jobState;
 
     public static JobResponsePayload createJobResponsePayloadFromJob(Job job, User user) {
         return JobResponsePayload.builder()
@@ -48,7 +48,7 @@ public class JobResponsePayload {
                 .timestamp(Timestamp.from(Instant.now()))
                 .user(user)
                 .offers(job.getOffers())
-                .hiddenForCurrentUser(job.getHiddenForUsers().contains(user))
+                .jobState(JobState.getState(job, user))
                 .build();
     }
 }

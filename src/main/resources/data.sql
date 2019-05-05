@@ -28,5 +28,4 @@ INSERT INTO offers(accepted, cost, description, duration, job_id, user_id)
   VALUES (false, 200, 'repede si mai bine', 100, -2, 0);
 INSERT INTO offers(accepted, cost, description, duration, job_id, user_id)
   VALUES (false, 300, 'repede si prost', 100, -1, 0);
-INSERT INTO offers(accepted, cost, description, duration, job_id, user_id)
-  VALUES (false, 400, 'incet si prost', 200, -0, 0);
+--INSERT INTO offers(accepted, cost, description, duration, job_id, user_id) VALUES (false, 400, 'incet si prost', 200, 0, 0);
