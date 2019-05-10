@@ -3,6 +3,7 @@ package com.dans.service.payloads;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
@@ -11,7 +12,7 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode(callSuper = false)
 public class UserProfilePayload extends SignUpPayload {
 
-    @NotBlank
+    @NotNull
     private Long id;
 
     @NotBlank
