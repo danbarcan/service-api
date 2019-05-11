@@ -46,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/user/updateProfile")
-    @PreAuthorize("authentication.id = userProfilePayload.id")
+    @PreAuthorize("authentication.id = userProfilePayload.getId()")
     public Boolean updateUserProfile(@Valid @RequestBody UserProfilePayload userProfilePayload) {
         return userService.updateUserDetails(userProfilePayload);
     }
