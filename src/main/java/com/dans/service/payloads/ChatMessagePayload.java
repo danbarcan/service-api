@@ -14,9 +14,6 @@ public class ChatMessagePayload {
     private Long id;
 
     @NotNull
-    private Long userId;
-
-    @NotNull
     private Long jobId;
 
     @NotBlank
