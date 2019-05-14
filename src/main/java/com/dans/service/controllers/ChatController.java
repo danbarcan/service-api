@@ -7,10 +7,7 @@ import com.dans.service.services.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -26,7 +23,7 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @GetMapping("/chat/postMessage")
+    @PostMapping("/chat/postMessage")
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN') OR hasRole('SERVICE')")
     public ResponseEntity<List<ChatMessage>> postMessage(@Valid @RequestBody ChatMessagePayload chatMessagePayload) {
         return chatService.postMessage(chatMessagePayload);
