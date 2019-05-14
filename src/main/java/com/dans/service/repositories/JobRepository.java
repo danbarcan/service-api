@@ -14,4 +14,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findAllByOrderByTimestampDesc();
 
     List<Job> findAllByUserIdOrderByTimestampDesc(Long userId);
+
+    List<Job> findAllByUserIdOrAcceptedServiceOrderByTimestampDesc(Long userId, Long acceptedServiceId);
 }
