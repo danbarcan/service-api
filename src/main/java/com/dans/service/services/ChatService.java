@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -127,7 +129,7 @@ public class ChatService {
 
         Job job = jobOptional.get();
 
-        if (!job.getUser().getId().equals(fromUser.getId()) || !job.getAcceptedService().getId().equals(fromUser.getId())) {
+        if (!job.getUser().getId().equals(fromUser.getId()) && !job.getAcceptedService().getId().equals(fromUser.getId())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
@@ -135,6 +137,8 @@ public class ChatService {
                 .message(chatMessagePayload.getMessage())
                 .fromUser(fromUser)
                 .job(job)
+                .timestamp(Timestamp.from(Instant.now()))
+                .read(false)
                 .build();
 
         chatRepository.save(message);
