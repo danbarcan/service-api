@@ -98,7 +98,7 @@ public class ChatService {
         }
 
         Job job = jobOptional.get();
-        if (!job.getUser().getId().equals(fromUser.getId()) || !job.getAcceptedService().getId().equals(fromUser.getId())) {
+        if (!job.getUser().getId().equals(fromUser.getId()) && !job.getAcceptedService().getId().equals(fromUser.getId())) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
