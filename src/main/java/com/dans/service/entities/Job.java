@@ -51,6 +51,7 @@ public class Job {
 
     @OneToMany(mappedBy = "job", cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Offer> offers;
 
     @JsonIgnore

@@ -65,6 +65,7 @@ public class User {
 
     @JsonIgnore
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -75,6 +76,7 @@ public class User {
 
     @JsonIgnore
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -85,6 +87,7 @@ public class User {
 
     @JsonIgnore
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -99,6 +102,7 @@ public class User {
 
     @JsonIgnore
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(mappedBy = "hiddenForUsers")
     Set<Job> hiddenJobs;
 }

@@ -46,6 +46,7 @@ public class Offer {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_id")
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Job job;
 
     public static Offer createOfferFromPayload(OfferPayload offerPayload, User service, Job job) {

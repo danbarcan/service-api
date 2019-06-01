@@ -47,7 +47,7 @@ public class ChatService {
         }
 
         User fromUser = userOptional.get();
-        List<Job> jobs = jobRepository.findAllByUserAndAcceptedServiceOrderByTimestampDesc(fromUser, fromUser);
+        List<Job> jobs = jobRepository.findAllByUserOrAcceptedServiceOrderByTimestampDesc(fromUser, fromUser);
 
         List<ChatMessage> chatMessages = chatRepository.findAllByJobIn(jobs);
         Map<Job, List<ChatMessage>> messagesByJob = chatMessages.stream().collect(Collectors.groupingBy(message -> message.getJob()));
@@ -71,7 +71,7 @@ public class ChatService {
         }
 
         User fromUser = userOptional.get();
-        List<Job> jobs = jobRepository.findAllByUserAndAcceptedServiceOrderByTimestampDesc(fromUser, fromUser);
+        List<Job> jobs = jobRepository.findAllByUserOrAcceptedServiceOrderByTimestampDesc(fromUser, fromUser);
 
         List<ChatMessage> chatMessages = chatRepository.findAllByJobIn(jobs);
         Map<Job, List<ChatMessage>> messagesByJob = chatMessages.stream().collect(Collectors.groupingBy(message -> message.getJob()));
