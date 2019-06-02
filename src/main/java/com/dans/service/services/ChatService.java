@@ -50,10 +50,10 @@ public class ChatService {
         List<Job> jobs = jobRepository.findAllByUserOrAcceptedServiceOrderByTimestampDesc(fromUser, fromUser);
 
         List<ChatMessage> chatMessages = chatRepository.findAllByJobIn(jobs);
-        Map<Job, List<ChatMessage>> messagesByJob = chatMessages.stream().collect(Collectors.groupingBy(message -> message.getJob()));
+        Map<Job, List<ChatMessage>> messagesByJob = chatMessages.stream().collect(Collectors.groupingBy(ChatMessage::getJob));
         Map<Job, Long> unreadMessagesByJob = messagesByJob.entrySet()
                 .stream()
-                .collect(Collectors.toMap(o -> o.getKey(), o -> o.getValue().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, o -> o.getValue().stream()
                         .filter(chatMessage -> !chatMessage.getFromUser().equals(fromUser) && !chatMessage.getRead()).count()));
 
         return ResponseEntity.status(HttpStatus.OK).body(unreadMessagesByJob);
@@ -74,9 +74,26 @@ public class ChatService {
         List<Job> jobs = jobRepository.findAllByUserOrAcceptedServiceOrderByTimestampDesc(fromUser, fromUser);
 
         List<ChatMessage> chatMessages = chatRepository.findAllByJobIn(jobs);
-        Map<Job, List<ChatMessage>> messagesByJob = chatMessages.stream().collect(Collectors.groupingBy(message -> message.getJob()));
+        Map<Job, List<ChatMessage>> messagesByJob = chatMessages.stream().collect(Collectors.groupingBy(ChatMessage::getJob));
 
         return ResponseEntity.status(HttpStatus.OK).body(messagesByJob);
+    }
+
+    public ResponseEntity<List<Job>> getAllJobsWithMessages() {
+        UserPrincipal userPrincipal = AppUtils.getCurrentUserDetails();
+        if (userPrincipal == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        Optional<User> userOptional = userRepository.findByUsername(userPrincipal.getUsername());
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        User fromUser = userOptional.get();
+        List<Job> jobs = jobRepository.findAllByUserOrAcceptedServiceOrderByTimestampDesc(fromUser, fromUser);
+
+        return ResponseEntity.status(HttpStatus.OK).body(jobs);
     }
 
     public ResponseEntity<List<ChatMessage>> getMessagesByJobId(Long jobId) {

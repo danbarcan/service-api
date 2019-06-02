@@ -47,4 +47,10 @@ public class ChatController {
         return chatService.getMessagesGroupByJob();
     }
 
+    @GetMapping("/chat/getAllJobsWithMessages")
+    @PreAuthorize("hasRole('USER') OR hasRole('ADMIN') OR hasRole('SERVICE')")
+    public ResponseEntity<List<Job>> getAllJobsWithMessages() {
+        return chatService.getAllJobsWithMessages();
+    }
+
 }

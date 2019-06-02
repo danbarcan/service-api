@@ -11,7 +11,7 @@ public enum JobState {
                 return UNAVAILABLE;
             }
         } else {
-            if (job.getOffers().stream().filter(offer -> user.equals(offer.getUser())).findAny().isPresent()) {
+            if (job.getOffers().stream().anyMatch(offer -> user.equals(offer.getUser()))) {
                 return OFFERED;
             } else if (job.getHiddenForUsers().contains(user)) {
                 return HIDDEN;
