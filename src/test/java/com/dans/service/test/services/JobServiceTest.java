@@ -4,6 +4,7 @@ import com.dans.service.entities.Job;
 import com.dans.service.entities.User;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JobPayload;
+import com.dans.service.repositories.CarRepository;
 import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.services.JobService;
@@ -38,11 +39,14 @@ public class JobServiceTest {
     private UserRepository userRepository;
 
     @Mock
+    private CarRepository carRepository;
+
+    @Mock
     private OfferService offerService;
 
     @Before
     public void setUp() {
-        this.jobService = new JobService(jobRepository, userRepository, offerService);
+        this.jobService = new JobService(jobRepository, userRepository, carRepository, offerService);
     }
 
     private User user = User.builder().email("test@test.com")

@@ -1,14 +1,14 @@
 package com.dans.service.services;
 
+import com.dans.service.entities.Car;
 import com.dans.service.entities.Job;
-import com.dans.service.entities.Offer;
+import com.dans.service.entities.PartsType;
 import com.dans.service.entities.User;
-import com.dans.service.payloads.ApiResponse;
-import com.dans.service.payloads.JobPayload;
-import com.dans.service.payloads.JobResponsePayload;
-import com.dans.service.payloads.OfferPayload;
+import com.dans.service.payloads.*;
+import com.dans.service.repositories.CarRepository;
 import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,13 +31,16 @@ public class JobService {
 
     private UserRepository userRepository;
 
+    private CarRepository carRepository;
+
     private OfferService offerService;
 
     @Autowired
-    public JobService(final JobRepository jobRepository, final UserRepository userRepository, final OfferService offerService) {
+    public JobService(final JobRepository jobRepository, final UserRepository userRepository,final CarRepository carRepository, final OfferService offerService) {
         this.jobRepository = jobRepository;
         this.userRepository = userRepository;
         this.offerService = offerService;
+        this.carRepository = carRepository;
     }
 
     public ResponseEntity<ApiResponse> saveJob(JobPayload jobPayload) {
@@ -46,6 +52,39 @@ public class JobService {
 
         Job job = Job.createJobFromJobPayload(jobPayload, user.get());
 
+        jobRepository.save(job);
+
+        return ResponseEntity.ok(new ApiResponse(true, "Job successfully saved"));
+    }
+
+    public ResponseEntity<ApiResponse> saveJobUnregisteredUser(JobUnregisteredUserPayload jobPayload) {
+
+        User user = User.builder()
+                .username(jobPayload.getEmail())
+                .phoneNumber("0")
+                .name(jobPayload.getEmail())
+                .email(jobPayload.getEmail())
+                .password(AuthService.encodePassword(RandomString.make(10)))
+                .build();
+
+        Car car = Car.builder()
+                .model(jobPayload.getModel())
+                .make(jobPayload.getMake())
+                .year(jobPayload.getYear())
+                .user(user)
+                .build();
+
+        Job job = Job.builder()
+                .description(jobPayload.getDescription())
+                .partsType(PartsType.NEW)
+                .location(StringUtils.isEmpty(jobPayload.getLocation()) ? "location" : jobPayload.getLocation()) //TODO remove this mock location
+                .timestamp(Timestamp.from(Instant.now()))
+                .user(user)
+                .car(car)
+                .build();
+
+        userRepository.save(user);
+        carRepository.save(car);
         jobRepository.save(job);
 
         return ResponseEntity.ok(new ApiResponse(true, "Job successfully saved"));

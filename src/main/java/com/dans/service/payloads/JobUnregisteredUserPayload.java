@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -12,19 +13,19 @@ import javax.validation.constraints.NotBlank;
 public class JobUnregisteredUserPayload {
 
     @NotBlank
-    private String carBrand;
+    private String make;
 
     @NotBlank
-    private String carModel;
+    private String model;
 
-    @NotBlank
-    private Integer carYear;
+    @NotNull
+    private Integer year;
 
     @NotBlank
     private String description;
 
     @NotBlank
-    private String userEmail;
+    private String email;
 
     private String location;
 }

@@ -1,10 +1,7 @@
 package com.dans.service.controllers;
 
 import com.dans.service.entities.Job;
-import com.dans.service.payloads.ApiResponse;
-import com.dans.service.payloads.JobPayload;
-import com.dans.service.payloads.JobResponsePayload;
-import com.dans.service.payloads.OfferPayload;
+import com.dans.service.payloads.*;
 import com.dans.service.services.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +25,11 @@ public class JobController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ApiResponse> saveJob(@Valid @RequestBody JobPayload jobPayload) {
         return jobService.saveJob(jobPayload);
+    }
+
+    @PostMapping("/users/jobAnon")
+    public ResponseEntity<ApiResponse> saveJob(@Valid @RequestBody JobUnregisteredUserPayload jobPayload) {
+        return jobService.saveJobUnregisteredUser(jobPayload);
     }
 
     @PostMapping("/users/updateJob")

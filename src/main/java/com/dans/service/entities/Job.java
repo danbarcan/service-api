@@ -1,6 +1,7 @@
 package com.dans.service.entities;
 
 import com.dans.service.payloads.JobPayload;
+import com.dans.service.payloads.JobUnregisteredUserPayload;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.util.StringUtils;

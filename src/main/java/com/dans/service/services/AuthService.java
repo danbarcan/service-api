@@ -30,7 +30,7 @@ import java.net.URI;
 public class AuthService {
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider tokenProvider;
-    private PasswordEncoder passwordEncoder;
+    private static PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
 
@@ -80,7 +80,7 @@ public class AuthService {
                 .phoneNumber(signUpPayload.getPhone())
                 .build();
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(encodePassword(user.getPassword()));
 
         Role userRole;
 
@@ -109,6 +109,9 @@ public class AuthService {
                 .buildAndExpand(result.getUsername()).toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    }
 
+    public static String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 }
