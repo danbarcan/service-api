@@ -44,13 +44,34 @@ public class JobService {
     }
 
     public ResponseEntity<ApiResponse> saveJob(JobPayload jobPayload) {
-        Optional<User> user = userRepository.findById(jobPayload.getUserId());
+        Optional<User> userOptional = userRepository.findById(jobPayload.getUserId());
 
-        if (!user.isPresent()) {
+        if (!userOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "UNAUTHORIZED"));
         }
+        User user = userOptional.get();
 
-        Job job = Job.createJobFromJobPayload(jobPayload, user.get());
+        Optional<Car> carOptional = Optional.empty();
+        if (jobPayload.getCarId() != null) {
+            carOptional = carRepository.findById(jobPayload.getCarId());
+        }
+
+        Car car = null;
+        if (carOptional.isPresent()) {
+            car = carOptional.get();
+        } else {
+            car = Car.builder()
+                    .model(jobPayload.getModel())
+                    .make(jobPayload.getMake())
+                    .year(jobPayload.getYear())
+                    .user(user)
+                    .build();
+
+            carRepository.save(car);
+        }
+
+        Job job = Job.createJobFromJobPayload(jobPayload, user);
+        job.setCar(car);
 
         jobRepository.save(job);
 
@@ -154,6 +175,14 @@ public class JobService {
     }
 
     public ResponseEntity<ApiResponse> hideJob(Long offerId) {
+        return hideOrUnhideJob(offerId, true);
+    }
+
+    public ResponseEntity<ApiResponse> unhideJob(Long offerId) {
+        return hideOrUnhideJob(offerId, false);
+    }
+
+    public ResponseEntity<ApiResponse> hideOrUnhideJob(Long offerId, boolean hide) {
         Optional<Job> jobOptional = jobRepository.findById(offerId);
         if (!jobOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Job not found"));
@@ -168,10 +197,15 @@ public class JobService {
         }
         User user = userOptional.get();
         Job job = jobOptional.get();
-        job.addUserToHiddenList(user);
+
+        if (hide) {
+            job.addUserToHiddenList(user);
+        } else {
+            job.removeUserToHiddenList(user);
+        }
         jobRepository.save(job);
 
-        return ResponseEntity.ok(new ApiResponse(true, "Offer successfully deleted"));
+        return ResponseEntity.ok(new ApiResponse(true, "Job successfully " + (hide ? "hidden" : "unhidden")));
     }
 
     private List<JobResponsePayload> getAllJobResponsePayloads(List<Job> jobs, User user) {

@@ -45,6 +45,7 @@ public class JobResponsePayload {
                 .user(user)
                 .offers(job.getOffers())
                 .jobState(JobState.getState(job, user))
+                .car(job.getCar())
                 .build();
     }
 }

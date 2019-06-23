@@ -22,4 +22,10 @@ public class JobPayload {
     private String description;
 
     private String location;
+
+    private String model;
+
+    private String make;
+
+    private Integer year;
 }

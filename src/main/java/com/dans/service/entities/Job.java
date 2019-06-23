@@ -42,7 +42,8 @@ public class Job {
     @Column(columnDefinition="Timestamp default current_timestamp")
     private Timestamp timestamp;
 
-    @Transient
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "car_id")
     private Car car;
 
     @NotNull
@@ -83,5 +84,9 @@ public class Job {
 
     public void addUserToHiddenList(User user) {
         this.hiddenForUsers.add(user);
+    }
+
+    public void removeUserToHiddenList(User user) {
+        this.hiddenForUsers.remove(user);
     }
 }

@@ -73,4 +73,10 @@ public class JobController {
     public ResponseEntity<ApiResponse> hideJob(@RequestParam Long jobId) {
         return jobService.hideJob(jobId);
     }
+
+    @GetMapping("/services/offers/unhideJob")
+    @PreAuthorize("hasRole('ROLE_SERVICE')")
+    public ResponseEntity<ApiResponse> unhideJob(@RequestParam Long jobId) {
+        return jobService.unhideJob(jobId);
+    }
 }
