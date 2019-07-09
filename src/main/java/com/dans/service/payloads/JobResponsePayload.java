@@ -42,7 +42,7 @@ public class JobResponsePayload {
                 .acceptedService(job.getAcceptedService())
                 .location(StringUtils.isEmpty(job.getLocation()) ? "location" : job.getLocation()) //TODO remove this mock location
                 .timestamp(Timestamp.from(Instant.now()))
-                .user(user)
+                .user(job.getUser())
                 .offers(job.getOffers())
                 .jobState(JobState.getState(job, user))
                 .car(job.getCar())
