@@ -1,8 +1,6 @@
 package com.dans.service.test.repositories;
 
-import com.dans.service.entities.Review;
-import com.dans.service.entities.ServiceDetails;
-import com.dans.service.entities.User;
+import com.dans.service.entities.*;
 import com.dans.service.repositories.ReviewRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -48,9 +46,26 @@ public class ReviewRepositoryTest {
             .phoneNumber("07test")
             .build();
 
+    private Car car = Car.builder()
+            .make("Mercedes")
+            .model("GLA")
+            .year(1000)
+            .user(user)
+            .build();
+
+    private Job job = Job.builder()
+            .user(user)
+            .description("description")
+            .location("location")
+            .partsType(PartsType.NEW)
+            .timestamp(Timestamp.from(Instant.now()))
+            .car(car)
+            .build();
+
     private Review review = Review.builder()
             .service(service)
             .user(user)
+            .job(job)
             .timestamp(Timestamp.from(Instant.now()))
             .description("description")
             .rating(5)
@@ -60,6 +75,8 @@ public class ReviewRepositoryTest {
     public void findAllShouldReturnReviews() {
         this.entityManager.persist(service);
         this.entityManager.persist(user);
+        this.entityManager.persist(car);
+        this.entityManager.persist(job);
         this.entityManager.persist(review);
         List<Review> reviews = reviewRepository.findAll();
         Assertions.assertThat(reviews != null && reviews.size() == 1).isTrue();
@@ -75,6 +92,8 @@ public class ReviewRepositoryTest {
     public void findByIdShouldReturnReview() {
         this.entityManager.persist(service);
         this.entityManager.persist(user);
+        this.entityManager.persist(car);
+        this.entityManager.persist(job);
         this.entityManager.persist(review);
         List<Review> reviews = reviewRepository.findAll();
         Review review1 = reviews.get(0);
