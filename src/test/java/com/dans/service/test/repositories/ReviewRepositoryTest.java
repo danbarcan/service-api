@@ -52,7 +52,6 @@ public class ReviewRepositoryTest {
             .service(service)
             .user(user)
             .timestamp(Timestamp.from(Instant.now()))
-            .byService(true)
             .description("description")
             .rating(5)
             .build();

@@ -1,5 +1,6 @@
 package com.dans.service.entities;
 
+import com.dans.service.payloads.ReviewPayload;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,28 +18,46 @@ import java.sql.Timestamp;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    private Long id;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_id")
-    protected User service;
+    private User service;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    protected User user;
+    private User user;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id")
+    private Job job;
 
     @NotBlank
-    protected String description;
+    private String description;
 
     @NotNull
-    protected Integer rating;
-
-    @NotNull
-    protected Boolean byService;
+    private Integer rating;
 
     @NotNull
     @Column(columnDefinition="Timestamp default current_timestamp")
     private Timestamp timestamp;
+
+    public static Review createReviewFromPayload(ReviewPayload reviewPayload, User service, User user, Job job) {
+        return Review.builder()
+                .description(reviewPayload.getDescription())
+                .job(job)
+                .service(service)
+                .user(user)
+                .rating(reviewPayload.getRating())
+                .build();
+    }
+
+    public Review updateReviewFromPayload(ReviewPayload reviewPayload) {
+        this.setDescription(reviewPayload.getDescription());
+        this.setRating(reviewPayload.getRating());
+        return this;
+    }
 }
