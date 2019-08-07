@@ -1,14 +1,11 @@
 package com.dans.service.services;
 
 import com.dans.service.entities.Job;
-import com.dans.service.entities.Offer;
 import com.dans.service.entities.Review;
 import com.dans.service.entities.User;
 import com.dans.service.payloads.ApiResponse;
-import com.dans.service.payloads.OfferPayload;
 import com.dans.service.payloads.ReviewPayload;
 import com.dans.service.repositories.JobRepository;
-import com.dans.service.repositories.OfferRepository;
 import com.dans.service.repositories.ReviewRepository;
 import com.dans.service.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +41,9 @@ public class ReviewService {
 
         Job job = jobOptional.get();
 
-        Optional<User> service = userRepository.findById(job.getAcceptedService().getId());
+        Optional<User> serviceOptional = userRepository.findById(job.getAcceptedService().getId());
 
-        if (!service.isPresent()) {
+        if (!serviceOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "UNAUTHORIZED"));
         }
         Optional<User> user = userRepository.findById(job.getUser().getId());
@@ -54,9 +51,14 @@ public class ReviewService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "UNAUTHORIZED"));
         }
 
-        Review review = Review.createReviewFromPayload(reviewPayload, service.get(), user.get(), jobOptional.get());
+        User service = serviceOptional.get();
+
+        Review review = Review.createReviewFromPayload(reviewPayload, service, user.get(), jobOptional.get());
 
         reviewRepository.save(review);
+
+        service.setRating(reviewRepository.getRating(service));
+        userRepository.save(service);
 
         return ResponseEntity.ok(new ApiResponse(true, "Review successfully saved"));
     }
@@ -71,6 +73,10 @@ public class ReviewService {
         review.updateReviewFromPayload(reviewPayload);
 
         reviewRepository.save(review);
+
+        User service = review.getService();
+        service.setRating(reviewRepository.getRating(service));
+        userRepository.save(service);
 
         return ResponseEntity.ok(new ApiResponse(true, "Review successfully updated"));
     }
