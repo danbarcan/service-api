@@ -2,12 +2,15 @@ package com.dans.service.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.mail.*;
-import javax.mail.internet.*;
-import java.io.IOException;
-import java.util.Date;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 @Service
@@ -15,77 +18,92 @@ public class MailService {
 
     private static final Logger log = LoggerFactory.getLogger(MailService.class);
 
-    public void sendmail() throws MessagingException, IOException {
+    @Value("${smtp.host}")
+    private String smtpHost;
+
+    @Value("${smtp.port}")
+    private String smtpPort;
+
+    @Value("${smtp.username}")
+    private String smtpUsername;
+
+    @Value("${smtp.password}")
+    private String smtpPassword;
+
+    @Value("${mail.register}")
+    private String registerMessage;
+
+    @Value("${mail.job.new.user}")
+    private String newJobUserMessage;
+
+    @Value("${mail.job.new.service}")
+    private String newJobServiceMessage;
+
+    @Value("${mail.offer.new}")
+    private String newOfferMessage;
+
+    @Value("${mail.offer.accepted}")
+    private String acceptedOfferMessage;
+
+    @Value("${mail.offer.refused}")
+    private String refusedOfferMessage;
+
+    private String fromAddress = "no-reply@serviceulmeu.ro";
+
+    private String fromName = "Serviceul meu";
+
+    public void sendRegisterMail(com.dans.service.messaging.entities.Message message) {
+        sendmail("Inregistrare reusita", registerMessage, message.getEmailAddress(), fromAddress, fromName);
+    }
+
+    public void sendNewJobMail(com.dans.service.messaging.entities.Message message) {
+        sendmail("Cerere noua creata", newJobUserMessage, message.getJob().getUser().getEmail(), fromAddress, fromName);
+    }
+
+    public void sendNewOfferMail(com.dans.service.messaging.entities.Message message) {
+        sendmail("Ai primit o noua oferta", newOfferMessage, message.getJob().getUser().getEmail(), fromAddress, fromName);
+    }
+
+    public void sendAcceptedOfferMail(com.dans.service.messaging.entities.Message message) {
+        sendmail("Oferta ta a fost acceptata", acceptedOfferMessage, message.getJob().getAcceptedService().getEmail(), fromAddress, fromName);
+    }
+
+    public boolean sendmail(String title, String content, String toAddress, String fromAddress, String fromName) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("dan.barcan1994", "******");
-            }
-        });
-        Message msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress("welcome@serviceulmeu.ro", "Serviceul meu"));
-
-        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse("dan.barcan1994@gmail.com"));
-        msg.setSubject("Bine ai venit!");
-        msg.setContent("Bine ai venit la <b>Serviceul meu</b>", "text/html");
-        msg.setSentDate(new Date());
-
-        MimeBodyPart messageBodyPart = new MimeBodyPart();
-        messageBodyPart.setContent("Bine ai venit la <b>Serviceul meu</b>\"", "text/html");
-
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(messageBodyPart);
-        msg.setContent(multipart);
-        Transport.send(msg);
-    }
-
-    public void sendmail(String from, String pass, String[] to, String subject, String body) {
-        sendFromGMail(from, pass, to, subject, body);
-    }
-
-    private static void sendFromGMail(String from, String pass, String[] to, String subject, String body) {
-        Properties props = System.getProperties();
-        String host = "smtp.gmail.com";
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.user", from);
-        props.put("mail.smtp.password", pass);
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.auth", "true");
-
-        Session session = Session.getDefaultInstance(props);
-        MimeMessage message = new MimeMessage(session);
-
+        props.put("mail.smtp.host", smtpHost);
+        props.put("mail.smtp.socketFactory.port", smtpPort);
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         try {
-            message.setFrom(new InternetAddress(from));
-            InternetAddress[] toAddress = new InternetAddress[to.length];
 
-            // To get the array of addresses
-            for( int i = 0; i < to.length; i++ ) {
-                toAddress[i] = new InternetAddress(to[i]);
-            }
+            Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(smtpUsername, smtpPassword);
+                }
+            });
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(fromAddress, fromName));
 
-            for( int i = 0; i < toAddress.length; i++) {
-                message.addRecipient(Message.RecipientType.TO, toAddress[i]);
-            }
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toAddress));
+            msg.setSubject(title);
+            msg.setContent(content, "text/html");
 
-            message.setSubject(subject);
-            message.setText(body);
-            Transport transport = session.getTransport("smtp");
-            transport.connect(host, from, pass);
-            transport.sendMessage(message, message.getAllRecipients());
-            transport.close();
-        }
-        catch (AddressException ae) {
-            log.error(ae.getMessage(), ae);
+            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setContent(content, "text/html");
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+            msg.setContent(multipart);
+            Transport.send(msg);
         } catch (MessagingException me) {
-            log.error(me.getMessage(), me);
+            me.printStackTrace();
+            return false;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
         }
+        return true;
     }
 }

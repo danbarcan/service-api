@@ -5,15 +5,15 @@ public enum JobState {
 
     public static JobState getState(Job job, User user) {
         if (job.getAcceptedService() != null) {
-            if (user.equals(job.getAcceptedService())) {
+            if (job.getReview() != null) {
+                return COMPLETED;
+            } else if (user.equals(job.getAcceptedService())) {
                 return ACCEPTED;
             } else {
                 return UNAVAILABLE;
             }
         } else {
-            if (job.getReview() != null) {
-                return COMPLETED;
-            } else if (job.getOffers().stream().anyMatch(offer -> user.equals(offer.getUser()))) {
+            if (job.getOffers().stream().anyMatch(offer -> user.equals(offer.getUser()))) {
                 return OFFERED;
             } else if (job.getHiddenForUsers().contains(user)) {
                 return HIDDEN;

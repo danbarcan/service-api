@@ -4,6 +4,9 @@ import com.dans.service.entities.Car;
 import com.dans.service.entities.Job;
 import com.dans.service.entities.PartsType;
 import com.dans.service.entities.User;
+import com.dans.service.messaging.Publisher;
+import com.dans.service.messaging.entities.Message;
+import com.dans.service.messaging.entities.MessageType;
 import com.dans.service.payloads.*;
 import com.dans.service.repositories.CarRepository;
 import com.dans.service.repositories.JobRepository;
@@ -28,19 +31,18 @@ import java.util.stream.Collectors;
 public class JobService {
 
     private JobRepository jobRepository;
-
     private UserRepository userRepository;
-
     private CarRepository carRepository;
-
     private OfferService offerService;
+    private Publisher publisher;
 
     @Autowired
-    public JobService(final JobRepository jobRepository, final UserRepository userRepository,final CarRepository carRepository, final OfferService offerService) {
+    public JobService(final JobRepository jobRepository, final UserRepository userRepository,final CarRepository carRepository, final OfferService offerService, final Publisher publisher) {
         this.jobRepository = jobRepository;
         this.userRepository = userRepository;
         this.offerService = offerService;
         this.carRepository = carRepository;
+        this.publisher = publisher;
     }
 
     public ResponseEntity<ApiResponse> saveJob(JobPayload jobPayload) {
@@ -75,6 +77,8 @@ public class JobService {
 
         jobRepository.save(job);
 
+        publisher.produceMsg(createNewJobMessage(job));
+
         return ResponseEntity.ok(new ApiResponse(true, "Job successfully saved"));
     }
 
@@ -107,6 +111,8 @@ public class JobService {
         userRepository.save(user);
         carRepository.save(car);
         jobRepository.save(job);
+
+        publisher.produceMsg(createNewJobMessage(job));
 
         return ResponseEntity.ok(new ApiResponse(true, "Job successfully saved"));
     }
@@ -210,5 +216,12 @@ public class JobService {
 
     private List<JobResponsePayload> getAllJobResponsePayloads(List<Job> jobs, User user) {
         return jobs.stream().map(job -> JobResponsePayload.createJobResponsePayloadFromJob(job, user)).collect(Collectors.toList());
+    }
+
+    private Message createNewJobMessage(Job job) {
+        return Message.builder()
+                .messageType(MessageType.NEW_JOB)
+                .job(job)
+                .build();
     }
 }

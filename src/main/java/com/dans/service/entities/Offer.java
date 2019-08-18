@@ -43,7 +43,7 @@ public class Offer {
 
     @NotNull
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "job_id")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

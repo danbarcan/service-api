@@ -3,6 +3,9 @@ package com.dans.service.services;
 import com.dans.service.entities.Job;
 import com.dans.service.entities.Offer;
 import com.dans.service.entities.User;
+import com.dans.service.messaging.Publisher;
+import com.dans.service.messaging.entities.Message;
+import com.dans.service.messaging.entities.MessageType;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.OfferPayload;
 import com.dans.service.repositories.JobRepository;
@@ -20,16 +23,16 @@ import java.util.Optional;
 public class OfferService {
 
     private OfferRepository offerRepository;
-
     private JobRepository jobRepository;
-
     private UserRepository userRepository;
+    private Publisher publisher;
 
     @Autowired
-    public OfferService(final OfferRepository offerRepository, final JobRepository jobRepository, final UserRepository userRepository) {
+    public OfferService(final OfferRepository offerRepository, final JobRepository jobRepository, final UserRepository userRepository, final Publisher publisher) {
         this.offerRepository = offerRepository;
         this.jobRepository = jobRepository;
         this.userRepository = userRepository;
+        this.publisher = publisher;
     }
 
     public ResponseEntity<ApiResponse> saveOffer(OfferPayload offerPayload) {
@@ -47,6 +50,8 @@ public class OfferService {
         Offer offer = Offer.createOfferFromPayload(offerPayload, service.get(), job.get());
 
         offerRepository.save(offer);
+
+        publisher.produceMsg(createNewOfferMessage(offer));
 
         return ResponseEntity.ok(new ApiResponse(true, "Offer successfully saved"));
     }
@@ -82,6 +87,8 @@ public class OfferService {
 
         offerRepository.deleteAll(allOffersForJob);
 
+        publisher.produceMsg(createAcceptedOfferMessage(offer));
+
         return ResponseEntity.ok(new ApiResponse(true, "Offer successfully accepted"));
     }
 
@@ -109,5 +116,21 @@ public class OfferService {
         }
 
         return ResponseEntity.ok(offerRepository.findAllByUser(user.get()));
+    }
+
+    private Message createNewOfferMessage(Offer offer) {
+        return Message.builder()
+                .messageType(MessageType.NEW_OFFER)
+                .offer(offer)
+                .job(offer.getJob())
+                .build();
+    }
+
+    private Message createAcceptedOfferMessage(Offer offer) {
+        return Message.builder()
+                .messageType(MessageType.ACCEPTED_OFFER)
+                .offer(offer)
+                .job(offer.getJob())
+                .build();
     }
 }

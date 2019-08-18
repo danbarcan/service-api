@@ -29,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.Filter;
 
+@Ignore
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = UserController.class)
 @ContextConfiguration(classes = {WebMvcConfig.class})

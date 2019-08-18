@@ -5,6 +5,9 @@ import com.dans.service.entities.RoleName;
 import com.dans.service.entities.ServiceDetails;
 import com.dans.service.entities.User;
 import com.dans.service.exception.AppException;
+import com.dans.service.messaging.Publisher;
+import com.dans.service.messaging.entities.Message;
+import com.dans.service.messaging.entities.MessageType;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JwtAuthenticationResponse;
 import com.dans.service.payloads.LoginPayload;
@@ -33,16 +36,18 @@ public class AuthService {
     private static PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private Publisher publisher;
 
     @Autowired
     public AuthService(final AuthenticationManager authenticationManager, final JwtTokenProvider jwtTokenProvider,
                        final PasswordEncoder passwordEncoder, final UserRepository userRepository,
-                       final RoleRepository roleRepository) {
+                       final RoleRepository roleRepository, final Publisher publisher) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.publisher = publisher;
     }
 
     public ResponseEntity<JwtAuthenticationResponse> authenticateUser(LoginPayload loginRequest) {
@@ -104,6 +109,8 @@ public class AuthService {
 
         User result = userRepository.save(user);
 
+        publisher.produceMsg(createMessage(user));
+
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/users/{usernameOrEmail}")
                 .buildAndExpand(result.getUsername()).toUri();
@@ -113,5 +120,14 @@ public class AuthService {
 
     public static String encodePassword(String password) {
         return passwordEncoder.encode(password);
+    }
+
+    private Message createMessage(User user) {
+        return Message.builder()
+                .messageType(MessageType.REGISTER)
+                .emailAddress(user.getEmail())
+                .name(user.getName())
+                .username(user.getUsername())
+                .build();
     }
 }
