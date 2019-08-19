@@ -6,6 +6,7 @@ import com.dans.service.messaging.Publisher;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JobPayload;
 import com.dans.service.repositories.CarRepository;
+import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.services.JobService;
@@ -47,11 +48,14 @@ public class JobServiceTest {
     private OfferService offerService;
 
     @Mock
+    private CategoryRepository categoryRepository;
+
+    @Mock
     private Publisher publisher;
 
     @Before
     public void setUp() {
-        this.jobService = new JobService(jobRepository, userRepository, carRepository, offerService, publisher);
+        this.jobService = new JobService(jobRepository, userRepository, carRepository, offerService, categoryRepository, publisher);
     }
 
     private User user = User.builder().email("test@test.com")
@@ -61,7 +65,7 @@ public class JobServiceTest {
             .phoneNumber("07test")
             .build();
 
-    private JobPayload jobPayload = new JobPayload(-1L, 1L, 1L, "test", "test", "model", "make", 2000);
+    private JobPayload jobPayload = new JobPayload(-1L, 1L, null, 1L, "test", "test", "model", "make", 2000);
 
     private Job job = Job.createJobFromJobPayload(jobPayload, user);
 
