@@ -15,6 +15,8 @@ public class JobUnregisteredUserPayload {
     @NotBlank
     private String make;
 
+    private Long categoryId;
+
     @NotBlank
     private String model;
 

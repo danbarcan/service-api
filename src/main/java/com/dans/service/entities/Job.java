@@ -43,13 +43,16 @@ public class Job {
     private Timestamp timestamp;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "car_id")
     private Car car;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "review_id")
     private Review review;
-
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)

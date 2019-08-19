@@ -36,6 +36,8 @@ public class JobResponsePayload {
 
     private Review review;
 
+    private Category category;
+
     public static JobResponsePayload createJobResponsePayloadFromJob(Job job, User user) {
         return JobResponsePayload.builder()
                 .id(job.getId())
@@ -49,6 +51,7 @@ public class JobResponsePayload {
                 .jobState(JobState.getState(job, user))
                 .car(job.getCar())
                 .review(job.getReview())
+                .category(job.getCategory())
                 .build();
     }
 }

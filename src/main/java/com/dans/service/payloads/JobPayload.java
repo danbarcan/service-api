@@ -15,6 +15,8 @@ public class JobPayload {
 
     @NotNull
     private Long userId;
+
+    private Long categoryId;
     
     private Long carId;
 

@@ -1,14 +1,12 @@
 package com.dans.service.services;
 
-import com.dans.service.entities.Car;
-import com.dans.service.entities.Job;
-import com.dans.service.entities.PartsType;
-import com.dans.service.entities.User;
+import com.dans.service.entities.*;
 import com.dans.service.messaging.Publisher;
 import com.dans.service.messaging.entities.Message;
 import com.dans.service.messaging.entities.MessageType;
 import com.dans.service.payloads.*;
 import com.dans.service.repositories.CarRepository;
+import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
 import net.bytebuddy.utility.RandomString;
@@ -34,14 +32,16 @@ public class JobService {
     private UserRepository userRepository;
     private CarRepository carRepository;
     private OfferService offerService;
+    private CategoryRepository categoryRepository;
     private Publisher publisher;
 
     @Autowired
-    public JobService(final JobRepository jobRepository, final UserRepository userRepository,final CarRepository carRepository, final OfferService offerService, final Publisher publisher) {
+    public JobService(final JobRepository jobRepository, final UserRepository userRepository, final CarRepository carRepository, final OfferService offerService, final CategoryRepository categoryRepository, final Publisher publisher) {
         this.jobRepository = jobRepository;
         this.userRepository = userRepository;
         this.offerService = offerService;
         this.carRepository = carRepository;
+        this.categoryRepository = categoryRepository;
         this.publisher = publisher;
     }
 
@@ -72,8 +72,16 @@ public class JobService {
             carRepository.save(car);
         }
 
+        Optional<Category> categoryOptional = categoryRepository.findById(jobPayload.getCategoryId());
+
+        if (!categoryOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "No such category!"));
+        }
+        Category category = categoryOptional.get();
+
         Job job = Job.createJobFromJobPayload(jobPayload, user);
         job.setCar(car);
+        job.setCategory(category);
 
         jobRepository.save(job);
 
@@ -99,6 +107,12 @@ public class JobService {
                 .user(user)
                 .build();
 
+        Optional<Category> categoryOptional = categoryRepository.findById(jobPayload.getCategoryId());
+        if (!categoryOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "No such category!"));
+        }
+        Category category = categoryOptional.get();
+
         Job job = Job.builder()
                 .description(jobPayload.getDescription())
                 .partsType(PartsType.NEW)
@@ -106,6 +120,7 @@ public class JobService {
                 .timestamp(Timestamp.from(Instant.now()))
                 .user(user)
                 .car(car)
+                .category(category)
                 .build();
 
         userRepository.save(user);
@@ -125,6 +140,15 @@ public class JobService {
 
         Job job = jobOptional.get();
         job.updateFieldsWithPayloadData(jobPayload);
+
+        if (job.getCategory() != null && !job.getCategory().getId().equals(jobPayload.getCategoryId())) {
+            Optional<Category> categoryOptional = categoryRepository.findById(jobPayload.getCategoryId());
+            if (!categoryOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "No such category!"));
+            }
+            Category category = categoryOptional.get();
+            job.setCategory(category);
+        }
 
         jobRepository.save(job);
 
