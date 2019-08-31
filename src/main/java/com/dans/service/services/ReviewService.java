@@ -54,8 +54,10 @@ public class ReviewService {
         User service = serviceOptional.get();
 
         Review review = Review.createReviewFromPayload(reviewPayload, service, user.get(), jobOptional.get());
-
         reviewRepository.save(review);
+
+        job.setReview(review);
+        jobRepository.save(job);
 
         service.setRating(reviewRepository.getRating(service));
         userRepository.save(service);

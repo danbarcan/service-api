@@ -53,10 +53,8 @@ public class User {
     @JoinColumn(name = "service_details_id")
     private ServiceDetails serviceDetails;
 
-    @JsonIgnore
-    @EqualsAndHashCode.Exclude
     @OneToMany(
-            mappedBy = "user",
+            mappedBy = "service",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.LAZY
