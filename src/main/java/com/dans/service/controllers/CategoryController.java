@@ -41,7 +41,6 @@ public class CategoryController {
     }
 
     @GetMapping("/users/allCategories")
-    @PreAuthorize("hasRole('ROLE_USER') OR hasRole('ROLE_ADMIN') OR hasRole('ROLE_SERVICE')")
     public ResponseEntity<List<Category>> getAllCategories() {
         return categoryService.getAllCategories();
     }
