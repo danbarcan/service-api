@@ -72,12 +72,16 @@ public class JobService {
             carRepository.save(car);
         }
 
-        Optional<Category> categoryOptional = categoryRepository.findById(jobPayload.getCategoryId());
+        Category category = null;
+        if (jobPayload.getCategoryId() != null) {
+            Optional<Category> categoryOptional = categoryRepository.findById(jobPayload.getCategoryId());
 
-        if (!categoryOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "No such category!"));
+
+            if (!categoryOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "No such category!"));
+            }
+            category = categoryOptional.get();
         }
-        Category category = categoryOptional.get();
 
         Job job = Job.createJobFromJobPayload(jobPayload, user);
         job.setCar(car);
