@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -45,7 +46,8 @@ public class JobRepositoryTest {
     private Job job = Job.builder()
             .user(user)
             .description("description")
-            .location("location")
+            .lat(new BigDecimal(42.4566))
+            .lng(new BigDecimal(32.4566))
             .partsType(PartsType.NEW)
             .timestamp(Timestamp.from(Instant.now()))
             .car(car)

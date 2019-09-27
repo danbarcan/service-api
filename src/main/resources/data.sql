@@ -2,8 +2,8 @@ INSERT INTO roles(name) VALUES('ROLE_USER');
 INSERT INTO roles(name) VALUES('ROLE_SERVICE');
 INSERT INTO roles(name) VALUES('ROLE_ADMIN');
 
-insert into categories(id, description) values (-2, 'cat1');
-insert into categories(id, description) values (-1, 'cat2');
+insert into categories(id, description) values (0, 'cat1');
+insert into categories(id, description) values (1, 'cat2');
 
 INSERT INTO users(id, email, name, password, phone_number, rating, username, role_id, service_details_id)
 	VALUES (-1, 'dan_claw20@yahoo.com', 'danut', '$2a$10$/S2JpiypueclFU3N.TuWle9BOwTOo5ydm/DoL8XHniNpRiTMwF22W', '1234567890', null, 'danut', 1, null);
@@ -21,9 +21,9 @@ INSERT INTO users(id, email, name, password, phone_number, rating, username, rol
 INSERT INTO cars(id, make, model, year, user_id) VALUES (-1, 'audi', 'a1', 2000, -1);
 INSERT INTO cars(id, make, model, year, user_id) VALUES (0, 'audi', 'a2', 2001, -1);
 
-INSERT INTO job(id, description, location, parts_type, service_id, user_id, car_id, category_id) VALUES (-1, 'stricat', 'in zona', 1, null, -1, -1, -2);
-INSERT INTO job(id, description, location, parts_type, service_id, user_id, car_id, category_id) VALUES (-2, 'stricat1', 'in zona1', 1, null, -1, -1, -1);
-INSERT INTO job(id, description, location, parts_type, service_id, user_id, car_id, category_id) VALUES (0, 'stricat2', 'in zona2', 1, null, -1, 0, -2);
+INSERT INTO job(id, description, parts_type, service_id, user_id, car_id, LAT, LNG) VALUES (-1, 'stricat', 1, null, -1, -1, 42.323, 32.32);
+INSERT INTO job(id, description, parts_type, service_id, user_id, car_id, LAT, LNG) VALUES (-2, 'stricat1', 1, null, -1, -1, 42.323, 32.32);
+INSERT INTO job(id, description, parts_type, service_id, user_id, car_id, LAT, LNG) VALUES (0, 'stricat2', 1, null, -1, 0, 42.323, 32.32);
 
 INSERT INTO offers(accepted, cost, description, duration, job_id, user_id)
   VALUES (false, 100, 'repede si bine', 100, -1, 0);

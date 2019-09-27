@@ -17,12 +17,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,20 +73,9 @@ public class JobService {
             carRepository.save(car);
         }
 
-        Category category = null;
-        if (jobPayload.getCategoryId() != null) {
-            Optional<Category> categoryOptional = categoryRepository.findById(jobPayload.getCategoryId());
-
-
-            if (!categoryOptional.isPresent()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "No such category!"));
-            }
-            category = categoryOptional.get();
-        }
-
         Job job = Job.createJobFromJobPayload(jobPayload, user);
         job.setCar(car);
-        job.setCategory(category);
+        job.setCategories(getCategoriesFromIdList(jobPayload.getCategories()));
 
         jobRepository.save(job);
 
@@ -111,20 +101,15 @@ public class JobService {
                 .user(user)
                 .build();
 
-        Optional<Category> categoryOptional = categoryRepository.findById(jobPayload.getCategoryId());
-        if (!categoryOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "No such category!"));
-        }
-        Category category = categoryOptional.get();
-
         Job job = Job.builder()
                 .description(jobPayload.getDescription())
                 .partsType(PartsType.NEW)
-                .location(StringUtils.isEmpty(jobPayload.getLocation()) ? "location" : jobPayload.getLocation()) //TODO remove this mock location
+                .lat(jobPayload.getLat())
+                .lng(jobPayload.getLng())
                 .timestamp(Timestamp.from(Instant.now()))
                 .user(user)
                 .car(car)
-                .category(category)
+                .categories(getCategoriesFromIdList(jobPayload.getCategories()))
                 .build();
 
         userRepository.save(user);
@@ -145,14 +130,7 @@ public class JobService {
         Job job = jobOptional.get();
         job.updateFieldsWithPayloadData(jobPayload);
 
-        if (job.getCategory() != null && !job.getCategory().getId().equals(jobPayload.getCategoryId())) {
-            Optional<Category> categoryOptional = categoryRepository.findById(jobPayload.getCategoryId());
-            if (!categoryOptional.isPresent()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "No such category!"));
-            }
-            Category category = categoryOptional.get();
-            job.setCategory(category);
-        }
+        job.setCategories(getCategoriesFromIdList(jobPayload.getCategories()));
 
         jobRepository.save(job);
 
@@ -251,5 +229,17 @@ public class JobService {
                 .messageType(MessageType.NEW_JOB)
                 .job(job)
                 .build();
+    }
+
+    private Set<Category> getCategoriesFromIdList(Long[] categoryIds) {
+        return Arrays.stream(categoryIds).map(cat -> {
+            Optional<Category> categoryOptional = categoryRepository.findById(cat);
+
+            if (categoryOptional.isPresent()) {
+                return categoryOptional.get();
+            } else {
+                return null;
+            }
+        }).collect(Collectors.toSet());
     }
 }

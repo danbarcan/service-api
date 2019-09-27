@@ -1,14 +1,13 @@
 package com.dans.service.entities;
 
 import com.dans.service.payloads.JobPayload;
-import com.dans.service.payloads.JobUnregisteredUserPayload;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Set;
@@ -35,16 +34,23 @@ public class Job {
     @JoinColumn(name = "service_id")
     private User acceptedService;
 
-    @NotBlank
-    private String location;
+    @NotNull
+    private BigDecimal lat;
 
     @NotNull
-    @Column(columnDefinition="Timestamp default current_timestamp")
+    private BigDecimal lng;
+
+    @NotNull
+    @Column(columnDefinition = "Timestamp default current_timestamp")
     private Timestamp timestamp;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "job_category",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    Set<Category> categories;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "car_id")
@@ -76,7 +82,8 @@ public class Job {
         return Job.builder()
                 .description(jobPayload.getDescription())
                 .partsType(PartsType.NEW)
-                .location(StringUtils.isEmpty(jobPayload.getLocation()) ? "location" : jobPayload.getLocation()) //TODO remove this mock location
+                .lat(jobPayload.getLat())
+                .lng(jobPayload.getLng())
                 .timestamp(Timestamp.from(Instant.now()))
                 .user(user)
                 .build();
@@ -84,7 +91,8 @@ public class Job {
 
     public Job updateFieldsWithPayloadData(JobPayload jobPayload) {
         this.setDescription(jobPayload.getDescription());
-        this.setLocation(jobPayload.getLocation());
+        this.setLat(jobPayload.getLat());
+        this.setLng(jobPayload.getLng());
         this.setTimestamp(Timestamp.from(Instant.now()));
 
         return this;

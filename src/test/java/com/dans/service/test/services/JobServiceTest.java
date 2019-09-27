@@ -11,7 +11,6 @@ import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.services.JobService;
 import com.dans.service.services.OfferService;
-import org.assertj.core.api.Assertions;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -25,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -65,7 +65,7 @@ public class JobServiceTest {
             .phoneNumber("07test")
             .build();
 
-    private JobPayload jobPayload = new JobPayload(-1L, 1L, null, 1L, "test", "test", "model", "make", 2000);
+    private JobPayload jobPayload = new JobPayload(-1L, 1L, new BigDecimal(42.4566), new BigDecimal(32.4566), null, "test", "model", "make", 2000, new Long[]{1L, 2L});
 
     private Job job = Job.createJobFromJobPayload(jobPayload, user);
 
