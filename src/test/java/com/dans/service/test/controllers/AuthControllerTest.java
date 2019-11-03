@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 
 @Ignore
@@ -56,9 +57,9 @@ public class AuthControllerTest {
             .phoneNumber("07test")
             .build();
 
-    private SignUpPayload signUpPayloadUser = new SignUpPayload("test", "test", "test", "test", "test", "", "", "0");
+    private SignUpPayload signUpPayloadUser = new SignUpPayload("test", "test", "test", "test", "test", "", "", "0", BigDecimal.ZERO, BigDecimal.ZERO, null);
 
-    private SignUpPayload signUpPayloadService = new SignUpPayload("test", "test", "test", "test", "test", "test", "test", "0");
+    private SignUpPayload signUpPayloadService = new SignUpPayload("test", "test", "test", "test", "test", "test", "test", "0", BigDecimal.ZERO, BigDecimal.ZERO, null);
 
     private LoginPayload loginPayload = new LoginPayload("test@test.com", "password");
 

@@ -6,6 +6,7 @@ import com.dans.service.entities.User;
 import com.dans.service.entities.UserProfile;
 import com.dans.service.payloads.UserProfilePayload;
 import com.dans.service.payloads.UserSummary;
+import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.UserPrincipal;
 import com.dans.service.services.UserService;
@@ -34,11 +35,14 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
+    private CategoryRepository categoryRepository;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Before
     public void setUp() {
-        userService = new UserService(userRepository, passwordEncoder);
+        userService = new UserService(userRepository, categoryRepository, passwordEncoder);
     }
 
     private User user = User.builder().email("test@test.com")
@@ -49,7 +53,7 @@ public class UserServiceTest {
             .role(Role.builder().name(RoleName.ROLE_USER).build())
             .build();
 
-    private UserProfilePayload userProfilePayload = UserProfilePayload.childBuilder()
+    private UserProfilePayload userProfilePayload = UserProfilePayload.builder()
             .id(1L)
             .cui("12345")
             .email("test@test.com")

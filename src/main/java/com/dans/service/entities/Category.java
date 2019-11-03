@@ -1,11 +1,15 @@
 package com.dans.service.entities;
 
+import com.dans.service.repositories.CategoryRepository;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -27,4 +31,16 @@ public class Category {
     @ToString.Exclude
     @ManyToMany(mappedBy = "categories")
     Set<Job> jobCategories;
+
+    public static Set<Category> getCategoriesFromIdList(CategoryRepository categoryRepository, Long[] categoryIds) {
+        return Arrays.stream(categoryIds).map(cat -> {
+            Optional<Category> categoryOptional = categoryRepository.findById(cat);
+
+            if (categoryOptional.isPresent()) {
+                return categoryOptional.get();
+            } else {
+                return null;
+            }
+        }).collect(Collectors.toSet());
+    }
 }

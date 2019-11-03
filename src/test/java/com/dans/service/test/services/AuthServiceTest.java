@@ -9,6 +9,7 @@ import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JwtAuthenticationResponse;
 import com.dans.service.payloads.LoginPayload;
 import com.dans.service.payloads.SignUpPayload;
+import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.RoleRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.JwtTokenProvider;
@@ -30,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Optional;
 
@@ -54,6 +56,9 @@ public class AuthServiceTest {
 
     @Mock
     private RoleRepository roleRepository;
+
+    @Mock
+    private CategoryRepository categoryRepository;
 
     @Mock
     private Authentication authentication;
@@ -82,13 +87,13 @@ public class AuthServiceTest {
             .phoneNumber("07test")
             .build();
 
-    private SignUpPayload signUpPayloadUser = new SignUpPayload("test", "test", "test", "test", "test", "", "", "0");
+    private SignUpPayload signUpPayloadUser = new SignUpPayload("test", "test", "test", "test", "test", "", "", "0", BigDecimal.ZERO, BigDecimal.ZERO, null);
 
-    private SignUpPayload signUpPayloadService = new SignUpPayload("test", "test", "test", "test", "test", "test", "test", "0");
+    private SignUpPayload signUpPayloadService = new SignUpPayload("test", "test", "test", "test", "test", "test", "test", "0", BigDecimal.ZERO, BigDecimal.ZERO, null);
 
-    private SignUpPayload signUpPayloadServiceWithoutAddress = new SignUpPayload("test", "test", "test", "test", "test", "test", "", "0");
+    private SignUpPayload signUpPayloadServiceWithoutAddress = new SignUpPayload("test", "test", "test", "test", "test", "test", "", "0", BigDecimal.ZERO, BigDecimal.ZERO, null);
 
-    private SignUpPayload signUpPayloadServiceWithoutCui = new SignUpPayload("test", "test", "test", "test", "test", "test", "test", "");
+    private SignUpPayload signUpPayloadServiceWithoutCui = new SignUpPayload("test", "test", "test", "test", "test", "test", "test", "", BigDecimal.ZERO, BigDecimal.ZERO, null);
 
     private LoginPayload loginPayload = new LoginPayload("test@test.com", "password");
 
@@ -97,7 +102,7 @@ public class AuthServiceTest {
 
     @Before
     public void setUp() {
-        authService = new AuthService(authenticationManager, tokenProvider, passwordEncoder, userRepository, roleRepository, publisher);
+        authService = new AuthService(authenticationManager, tokenProvider, passwordEncoder, userRepository, roleRepository, categoryRepository, publisher);
     }
 
     @Test

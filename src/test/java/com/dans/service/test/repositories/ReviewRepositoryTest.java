@@ -30,6 +30,8 @@ public class ReviewRepositoryTest {
             .address("test")
             .cui(111L)
             .name("ServiceDetails")
+            .lat(BigDecimal.ZERO)
+            .lng(BigDecimal.ZERO)
             .build();
 
     private User service = User.builder().email("service@test.com")

@@ -26,6 +26,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.dans.service.entities.Category.getCategoriesFromIdList;
+
 @Service
 public class JobService {
 
@@ -75,7 +77,7 @@ public class JobService {
 
         Job job = Job.createJobFromJobPayload(jobPayload, user);
         job.setCar(car);
-        job.setCategories(getCategoriesFromIdList(jobPayload.getCategories()));
+        job.setCategories(getCategoriesFromIdList(categoryRepository, jobPayload.getCategories()));
 
         jobRepository.save(job);
 
@@ -109,7 +111,7 @@ public class JobService {
                 .timestamp(Timestamp.from(Instant.now()))
                 .user(user)
                 .car(car)
-                .categories(getCategoriesFromIdList(jobPayload.getCategories()))
+                .categories(getCategoriesFromIdList(categoryRepository, jobPayload.getCategories()))
                 .build();
 
         userRepository.save(user);
@@ -130,7 +132,7 @@ public class JobService {
         Job job = jobOptional.get();
         job.updateFieldsWithPayloadData(jobPayload);
 
-        job.setCategories(getCategoriesFromIdList(jobPayload.getCategories()));
+        job.setCategories(getCategoriesFromIdList(categoryRepository, jobPayload.getCategories()));
 
         jobRepository.save(job);
 
@@ -229,17 +231,5 @@ public class JobService {
                 .messageType(MessageType.NEW_JOB)
                 .job(job)
                 .build();
-    }
-
-    private Set<Category> getCategoriesFromIdList(Long[] categoryIds) {
-        return Arrays.stream(categoryIds).map(cat -> {
-            Optional<Category> categoryOptional = categoryRepository.findById(cat);
-
-            if (categoryOptional.isPresent()) {
-                return categoryOptional.get();
-            } else {
-                return null;
-            }
-        }).collect(Collectors.toSet());
     }
 }

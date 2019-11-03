@@ -12,6 +12,7 @@ import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.JwtAuthenticationResponse;
 import com.dans.service.payloads.LoginPayload;
 import com.dans.service.payloads.SignUpPayload;
+import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.RoleRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.JwtTokenProvider;
@@ -29,6 +30,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+import static com.dans.service.entities.Category.getCategoriesFromIdList;
+
 @Service
 public class AuthService {
     private AuthenticationManager authenticationManager;
@@ -36,17 +39,19 @@ public class AuthService {
     private static PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
+    private CategoryRepository categoryRepository;
     private Publisher publisher;
 
     @Autowired
     public AuthService(final AuthenticationManager authenticationManager, final JwtTokenProvider jwtTokenProvider,
                        final PasswordEncoder passwordEncoder, final UserRepository userRepository,
-                       final RoleRepository roleRepository, final Publisher publisher) {
+                       final RoleRepository roleRepository, final CategoryRepository categoryRepository, final Publisher publisher) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.categoryRepository = categoryRepository;
         this.publisher = publisher;
     }
 
@@ -98,6 +103,9 @@ public class AuthService {
                     .name(signUpPayload.getServiceName())
                     .address(signUpPayload.getServiceAddress())
                     .cui(Long.parseLong(signUpPayload.getCui()))
+                    .lat(signUpPayload.getLat())
+                    .lng(signUpPayload.getLng())
+                    .categories(getCategoriesFromIdList(categoryRepository, signUpPayload.getCategories()))
                     .build();
             user.setServiceDetails(serviceDetails);
         } else {
