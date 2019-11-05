@@ -75,6 +75,7 @@ public class MailService {
         props.put("mail.smtp.host", smtpHost);
         props.put("mail.smtp.socketFactory.port", smtpPort);
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.ssl.checkserveridentity", true);
         try {
 
             Session session = Session.getInstance(props, new javax.mail.Authenticator() {
@@ -98,10 +99,10 @@ public class MailService {
             msg.setContent(multipart);
             Transport.send(msg);
         } catch (MessagingException me) {
-            me.printStackTrace();
+            log.error("Error while sending mail.", me);
             return false;
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error("Error while sending mail.", e);
             return false;
         }
         return true;

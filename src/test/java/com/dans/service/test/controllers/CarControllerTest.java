@@ -27,6 +27,7 @@ import java.util.Arrays;
 public class CarControllerTest {
 
     private CarController carController;
+    private Car car = new Car();
 
     @Mock
     private CarService carService;
@@ -41,16 +42,16 @@ public class CarControllerTest {
 
     @Test
     public void saveCar() {
-        BDDMockito.given(this.carService.saveCar(this.carPayload)).willReturn(ResponseEntity.ok(new ApiResponse(true, "Car saved")));
+        BDDMockito.given(this.carService.saveCar(this.carPayload)).willReturn(ResponseEntity.ok(Arrays.asList(new Car[] {car})));
 
-        Assert.assertThat(this.carController.saveCar(this.carPayload), Is.is(ResponseEntity.ok(new ApiResponse(true, "Car saved"))));
+        Assert.assertThat(this.carController.saveCar(this.carPayload), Is.is(ResponseEntity.ok(ResponseEntity.ok(Arrays.asList(new Car[] {car})))));
     }
 
     @Test
     public void updateCar() {
-        BDDMockito.given(this.carService.updateCar(this.carPayload)).willReturn(ResponseEntity.ok(new ApiResponse(true, "Car updated")));
+        BDDMockito.given(this.carService.updateCar(this.carPayload)).willReturn(ResponseEntity.ok(Arrays.asList(new Car[] {car})));
 
-        Assert.assertThat(this.carController.updateCar(this.carPayload), Is.is(ResponseEntity.ok(new ApiResponse(true, "Car updated"))));
+        Assert.assertThat(this.carController.updateCar(this.carPayload), Is.is(ResponseEntity.ok(Arrays.asList(new Car[] {car}))));
     }
 
     @Test

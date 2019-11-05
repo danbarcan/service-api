@@ -49,19 +49,7 @@ public class UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            user.setEmail(StringUtils.isEmpty(userProfilePayload.getEmail()) ? user.getEmail() : userProfilePayload.getEmail());
-            user.setName(StringUtils.isEmpty(userProfilePayload.getName()) ? user.getName() : userProfilePayload.getName());
-            user.setUsername(StringUtils.isEmpty(userProfilePayload.getUsername()) ? user.getUsername() : userProfilePayload.getUsername());
-            user.setPhoneNumber(StringUtils.isEmpty(userProfilePayload.getPhone()) ? user.getPhoneNumber() : userProfilePayload.getPhone());
-
-            ServiceDetails serviceDetails = user.getServiceDetails();
-            serviceDetails.setAddress(StringUtils.isEmpty(userProfilePayload.getServiceAddress()) ? serviceDetails.getAddress() : userProfilePayload.getServiceAddress());
-            serviceDetails.setName(StringUtils.isEmpty(userProfilePayload.getServiceName()) ? serviceDetails.getName() : userProfilePayload.getName());
-            serviceDetails.setCategories(userProfilePayload.getCategories() == null || userProfilePayload.getCategories().length == 0 ? serviceDetails.getCategories() : getCategoriesFromIdList(categoryRepository, userProfilePayload.getCategories()));
-            serviceDetails.setLat(userProfilePayload.getLat() == null ? serviceDetails.getLat() : userProfilePayload.getLat());
-            serviceDetails.setLng(userProfilePayload.getLng() == null ? serviceDetails.getLng() : userProfilePayload.getLng());
-
-            user.setPassword(passwordEncoder.encode(StringUtils.isEmpty(userProfilePayload.getEmail()) ? user.getEmail() : userProfilePayload.getPassword()));
+            updateUserFields(user, userProfilePayload);
 
             userRepository.save(user);
 
@@ -75,5 +63,43 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         return user.isPresent() ? UserProfile.createUserProfileFromUser(user.get()) : null;
+    }
+
+    private void updateUserFields(User user, UserProfilePayload userProfilePayload) {
+        if (!StringUtils.isEmpty(userProfilePayload.getEmail())) {
+            user.setEmail(userProfilePayload.getEmail());
+        }
+        if (!StringUtils.isEmpty(userProfilePayload.getName())) {
+            user.setName(userProfilePayload.getName());
+        }
+        if (!StringUtils.isEmpty(userProfilePayload.getUsername())) {
+            user.setUsername(userProfilePayload.getUsername());
+        }
+        if (!StringUtils.isEmpty(userProfilePayload.getPhone())) {
+            user.setPhoneNumber(userProfilePayload.getPhone());
+        }
+        if (!StringUtils.isEmpty(userProfilePayload.getPassword())) {
+            user.setPassword((passwordEncoder.encode(userProfilePayload.getPassword())));
+        }
+
+        updateServiceDetails(user.getServiceDetails(), userProfilePayload);
+    }
+
+    private void updateServiceDetails(ServiceDetails serviceDetails, UserProfilePayload userProfilePayload) {
+        if (!StringUtils.isEmpty(userProfilePayload.getServiceAddress())) {
+            serviceDetails.setAddress(userProfilePayload.getServiceAddress());
+        }
+        if (!StringUtils.isEmpty(userProfilePayload.getServiceName())) {
+            serviceDetails.setName(userProfilePayload.getServiceName());
+        }
+        if (userProfilePayload.getCategories() == null) {
+            serviceDetails.setCategories(getCategoriesFromIdList(categoryRepository, userProfilePayload.getCategories()));
+        }
+        if (userProfilePayload.getLat() == null) {
+            serviceDetails.setLat(userProfilePayload.getLat());
+        }
+        if (userProfilePayload.getLng() == null) {
+            serviceDetails.setLng(userProfilePayload.getLng());
+        }
     }
 }

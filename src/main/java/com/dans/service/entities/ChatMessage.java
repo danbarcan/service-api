@@ -37,5 +37,6 @@ public class ChatMessage {
     private User fromUser;
 
     @NotNull
+    @Builder.Default
     private Boolean read = false;
 }

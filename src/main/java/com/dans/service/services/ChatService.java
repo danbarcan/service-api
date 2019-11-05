@@ -1,6 +1,6 @@
 package com.dans.service.services;
 
-import com.dans.service.NotFoundException;
+import com.dans.service.exception.NotFoundException;
 import com.dans.service.entities.ChatMessage;
 import com.dans.service.entities.Job;
 import com.dans.service.entities.User;

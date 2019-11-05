@@ -48,7 +48,7 @@ public class AuthService {
                        final RoleRepository roleRepository, final CategoryRepository categoryRepository, final Publisher publisher) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = jwtTokenProvider;
-        this.passwordEncoder = passwordEncoder;
+        AuthService.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.categoryRepository = categoryRepository;

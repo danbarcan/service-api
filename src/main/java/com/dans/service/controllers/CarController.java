@@ -1,7 +1,6 @@
 package com.dans.service.controllers;
 
 import com.dans.service.entities.Car;
-import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.CarPayload;
 import com.dans.service.services.CarService;
 import org.springframework.beans.factory.annotation.Autowired;

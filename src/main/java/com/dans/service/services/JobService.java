@@ -1,6 +1,9 @@
 package com.dans.service.services;
 
-import com.dans.service.entities.*;
+import com.dans.service.entities.Car;
+import com.dans.service.entities.Job;
+import com.dans.service.entities.PartsType;
+import com.dans.service.entities.User;
 import com.dans.service.messaging.Publisher;
 import com.dans.service.messaging.entities.Message;
 import com.dans.service.messaging.entities.MessageType;
@@ -20,10 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.dans.service.entities.Category.getCategoriesFromIdList;
