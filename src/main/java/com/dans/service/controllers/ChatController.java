@@ -37,13 +37,13 @@ public class ChatController {
 
     @GetMapping("/chat/getUnreadMessages")
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN') OR hasRole('SERVICE')")
-    public ResponseEntity<Map<Job, Long>> getUnreadMessagesByJob() {
+    public ResponseEntity<Map<Long, Long>> getUnreadMessagesByJob() {
         return chatService.getUnreadMessagesByJob();
     }
 
     @GetMapping("/chat/getAllMessages")
     @PreAuthorize("hasRole('USER') OR hasRole('ADMIN') OR hasRole('SERVICE')")
-    public ResponseEntity<Map<Job, List<ChatMessage>>> getMessagesGroupByJob() {
+    public ResponseEntity<Map<Long, List<ChatMessage>>> getMessagesGroupByJob() {
         return chatService.getMessagesGroupByJob();
     }
 

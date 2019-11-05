@@ -30,24 +30,24 @@ public class CarService {
         return ResponseEntity.ok(carRepository.findAllByUserId(userId));
     }
 
-    public ResponseEntity<ApiResponse> saveCar(CarPayload carPayload) {
+    public ResponseEntity<List<Car>> saveCar(CarPayload carPayload) {
         Optional<User> user = userRepository.findById(carPayload.getUserId());
 
         if (!user.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "UNAUTHORIZED"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         Car car = Car.createCarFromPayload(carPayload, user.get());
 
         carRepository.save(car);
 
-        return ResponseEntity.ok(new ApiResponse(true, "Car saved"));
+        return ResponseEntity.ok(carRepository.findAllByUserId(user.get().getId()));
     }
 
-    public ResponseEntity<ApiResponse> updateCar(CarPayload carPayload) {
+    public ResponseEntity<List<Car>> updateCar(CarPayload carPayload) {
         Optional<Car> carOptional = carRepository.findById(carPayload.getId());
 
         if (!carOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Car not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         Car car = carOptional.get();
@@ -56,19 +56,19 @@ public class CarService {
 
         carRepository.save(car);
 
-        return ResponseEntity.ok(new ApiResponse(true, "Car updated"));
+        return ResponseEntity.ok(carRepository.findAllByUserId(car.getUser().getId()));
     }
 
-    public ResponseEntity<ApiResponse> deleteCar(Long carId) {
+    public ResponseEntity<List<Car>> deleteCar(Long carId) {
         Optional<Car> carOptional = carRepository.findById(carId);
 
         if (!carOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Car not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         Car car = carOptional.get();
         carRepository.delete(car);
 
-        return ResponseEntity.ok(new ApiResponse(true, "Car deleted"));
+        return ResponseEntity.ok(carRepository.findAllByUserId(car.getUser().getId()));
     }
 }

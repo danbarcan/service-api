@@ -1,5 +1,6 @@
 package com.dans.service.services;
 
+import com.dans.service.NotFoundException;
 import com.dans.service.entities.ChatMessage;
 import com.dans.service.entities.Job;
 import com.dans.service.entities.User;
@@ -9,6 +10,8 @@ import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.UserPrincipal;
 import com.dans.service.utils.AppUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChatService {
+    private static final Logger log = LoggerFactory.getLogger(ChatService.class);
+    private static User loggedUser;
 
     private UserRepository userRepository;
     private JobRepository jobRepository;
@@ -35,48 +40,29 @@ public class ChatService {
         this.jobRepository = jobRepository;
     }
 
-    public ResponseEntity<Map<Job, Long>> getUnreadMessagesByJob() {
-        UserPrincipal userPrincipal = AppUtils.getCurrentUserDetails();
-        if (userPrincipal == null) {
+    public ResponseEntity<Map<Long, Long>> getUnreadMessagesByJob() {
+        Map<Long, List<ChatMessage>> messagesByJob;
+        try {
+            messagesByJob = getMessagesByJob();
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
-        Optional<User> userOptional = userRepository.findByUsername(userPrincipal.getUsername());
-        if (!userOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        User fromUser = userOptional.get();
-        List<Job> jobs = jobRepository.findAllByUserOrAcceptedServiceOrderByTimestampDesc(fromUser, fromUser);
-
-        List<ChatMessage> chatMessages = chatRepository.findAllByJobIn(jobs);
-        Map<Job, List<ChatMessage>> messagesByJob = chatMessages.stream().collect(Collectors.groupingBy(ChatMessage::getJob));
-        Map<Job, Long> unreadMessagesByJob = messagesByJob.entrySet()
+        Map<Long, Long> unreadMessagesByJob = messagesByJob.entrySet()
                 .stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, o -> o.getValue().stream()
-                        .filter(chatMessage -> !chatMessage.getFromUser().equals(fromUser) && !chatMessage.getRead()).count()));
+                        .filter(chatMessage -> !chatMessage.getFromUser().equals(loggedUser) && !chatMessage.getRead()).count()));
 
         return ResponseEntity.status(HttpStatus.OK).body(unreadMessagesByJob);
     }
 
-    public ResponseEntity<Map<Job, List<ChatMessage>>> getMessagesGroupByJob() {
-        UserPrincipal userPrincipal = AppUtils.getCurrentUserDetails();
-        if (userPrincipal == null) {
+    public ResponseEntity<Map<Long, List<ChatMessage>>> getMessagesGroupByJob() {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(getMessagesByJob());
+        } catch (NotFoundException e) {
+            log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-
-        Optional<User> userOptional = userRepository.findByUsername(userPrincipal.getUsername());
-        if (!userOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        User fromUser = userOptional.get();
-        List<Job> jobs = jobRepository.findAllByUserOrAcceptedServiceOrderByTimestampDesc(fromUser, fromUser);
-
-        List<ChatMessage> chatMessages = chatRepository.findAllByJobIn(jobs);
-        Map<Job, List<ChatMessage>> messagesByJob = chatMessages.stream().collect(Collectors.groupingBy(ChatMessage::getJob));
-
-        return ResponseEntity.status(HttpStatus.OK).body(messagesByJob);
     }
 
     public ResponseEntity<List<Job>> getAllJobsWithMessages() {
@@ -165,5 +151,23 @@ public class ChatService {
         chatRepository.saveAll(chatMessages);
 
         return ResponseEntity.status(HttpStatus.OK).body(chatMessages);
+    }
+
+    private Map<Long, List<ChatMessage>> getMessagesByJob() throws NotFoundException {
+        UserPrincipal userPrincipal = AppUtils.getCurrentUserDetails();
+        if (userPrincipal == null) {
+            throw new NotFoundException("User not authenticated");
+        }
+
+        Optional<User> userOptional = userRepository.findByUsername(userPrincipal.getUsername());
+        if (!userOptional.isPresent()) {
+            throw new NotFoundException("User not found");
+        }
+
+        loggedUser = userOptional.get();
+        List<Job> jobs = jobRepository.findAllByUserOrAcceptedServiceOrderByTimestampDesc(loggedUser, loggedUser);
+
+        List<ChatMessage> chatMessages = chatRepository.findAllByJobIn(jobs);
+        return chatMessages.stream().collect(Collectors.groupingBy(message -> message.getJob().getId()));
     }
 }

@@ -30,19 +30,19 @@ public class CarController {
 
     @GetMapping("/users/deleteCar")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> deleteCar(@RequestParam Long carId) {
+    public ResponseEntity<List<Car>> deleteCar(@RequestParam Long carId) {
         return carService.deleteCar(carId);
     }
 
     @PostMapping("/users/car")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> saveCar(@Valid @RequestBody CarPayload carPayload) {
+    public ResponseEntity<List<Car>> saveCar(@Valid @RequestBody CarPayload carPayload) {
         return carService.saveCar(carPayload);
     }
 
     @PostMapping("/users/updateCar")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ApiResponse> updateCar(@Valid @RequestBody CarPayload carPayload) {
+    public ResponseEntity<List<Car>> updateCar(@Valid @RequestBody CarPayload carPayload) {
         return carService.updateCar(carPayload);
     }
 }
