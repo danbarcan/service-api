@@ -49,11 +49,11 @@ public class JobService {
         this.publisher = publisher;
     }
 
-    public ResponseEntity<ApiResponse> saveJob(JobPayload jobPayload) {
+    public ResponseEntity<List<JobResponsePayload>> saveJob(JobPayload jobPayload) {
         Optional<User> userOptional = userRepository.findById(jobPayload.getUserId());
 
         if (!userOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "UNAUTHORIZED"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         User user = userOptional.get();
 
@@ -84,7 +84,7 @@ public class JobService {
 
         publisher.produceMsg(createNewJobMessage(job));
 
-        return ResponseEntity.ok(new ApiResponse(true, "Job successfully saved"));
+        return getAllJobs(user.getId());
     }
 
     public ResponseEntity<ApiResponse> saveJobUnregisteredUser(JobUnregisteredUserPayload jobPayload) {
