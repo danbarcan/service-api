@@ -42,8 +42,8 @@ public class JobControllerTest {
 
     @Test
     public void saveJob() {
-        BDDMockito.given(this.jobController.saveJob(this.jobPayload)).willReturn(ResponseEntity.ok(new ApiResponse(true, "Job successfully saved")));
-        Assert.assertThat(jobController.saveJob(jobPayload), Is.is(ResponseEntity.ok(new ApiResponse(true, "Job successfully saved"))));
+        BDDMockito.given(this.jobController.saveJob(this.jobPayload)).willReturn(ResponseEntity.ok(Arrays.asList(new JobResponsePayload())));
+        Assert.assertThat(jobController.saveJob(jobPayload), Is.is(ResponseEntity.ok(Arrays.asList(new JobResponsePayload()))));
     }
 
     @Test
