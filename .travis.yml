@@ -4,8 +4,7 @@ notifications:
 
 deploy:
   provider: heroku
-  api_key:
-    secure: 7b7631a8-a6b4-4f37-b1cc-f02428be5a61
+  api_key: 7b7631a8-a6b4-4f37-b1cc-f02428be5a61
   app:
     serice-api
 
@@ -15,9 +14,8 @@ before_install:
 addons:
   sonarcloud:
     organization: "danbarcan-github" # the key of the org you chose at step #3
-    token:
-      secure: 5b429301ef360fc0183b10b776500bb7797aee2e # encrypted value of your token
+    token: 5b429301ef360fc0183b10b776500bb7797aee2e # encrypted value of your token
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
-#  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
-  - mvn clean verify install
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+#  - mvn clean verify install
