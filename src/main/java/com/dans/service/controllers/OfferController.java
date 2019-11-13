@@ -35,7 +35,7 @@ public class OfferController {
     }
 
     @GetMapping("/services/deleteOffer")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_SERVICE')")
     public ResponseEntity<ApiResponse> deleteOffer(@RequestParam Long offerId) {
         return offerService.deleteOffer(offerId);
     }
