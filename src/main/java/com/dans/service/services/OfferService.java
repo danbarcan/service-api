@@ -14,6 +14,9 @@ import com.dans.service.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -92,8 +95,17 @@ public class OfferService {
         return ResponseEntity.ok(new ApiResponse(true, "Offer successfully accepted"));
     }
 
-    public ResponseEntity<List<Offer>> deleteOffer(Long offerId) {
-        Optional<Offer> offerOptional = offerRepository.findById(offerId);
+    public ResponseEntity<List<Offer>> deleteOffer(Long jobId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Optional<User> userOptional = userRepository.findByEmailOrUsername(userDetails.getUsername(), userDetails.getUsername());
+
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        User user = userOptional.get();
+
+        Optional<Offer> offerOptional = offerRepository.findByUser_IdAndJob_Id(user.getId(), jobId);
         if (!offerOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

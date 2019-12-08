@@ -7,7 +7,10 @@ import com.dans.service.entities.User;
 import com.dans.service.messaging.Publisher;
 import com.dans.service.messaging.entities.Message;
 import com.dans.service.messaging.entities.MessageType;
-import com.dans.service.payloads.*;
+import com.dans.service.payloads.ApiResponse;
+import com.dans.service.payloads.JobPayload;
+import com.dans.service.payloads.JobResponsePayload;
+import com.dans.service.payloads.JobUnregisteredUserPayload;
 import com.dans.service.repositories.CarRepository;
 import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.JobRepository;
@@ -35,15 +38,13 @@ public class JobService {
     private JobRepository jobRepository;
     private UserRepository userRepository;
     private CarRepository carRepository;
-    private OfferService offerService;
     private CategoryRepository categoryRepository;
     private Publisher publisher;
 
     @Autowired
-    public JobService(final JobRepository jobRepository, final UserRepository userRepository, final CarRepository carRepository, final OfferService offerService, final CategoryRepository categoryRepository, final Publisher publisher) {
+    public JobService(final JobRepository jobRepository, final UserRepository userRepository, final CarRepository carRepository, final CategoryRepository categoryRepository, final Publisher publisher) {
         this.jobRepository = jobRepository;
         this.userRepository = userRepository;
-        this.offerService = offerService;
         this.carRepository = carRepository;
         this.categoryRepository = categoryRepository;
         this.publisher = publisher;
@@ -162,7 +163,10 @@ public class JobService {
         User user = userOptional.get();
         List<Job> jobs = jobRepository.findAllByOrderByTimestampDesc();
 
-        return ResponseEntity.ok(getAllJobResponsePayloads(jobs, user));
+        return ResponseEntity.ok(getAllJobResponsePayloads(jobs, user).stream().map(job -> {
+            job.setOffers(job.getOffers().stream().filter(offer -> offer.getUser().getId().equals(user.getId())).collect(Collectors.toSet()));
+            return job;
+        }).collect(Collectors.toList()));
     }
 
     public ResponseEntity<List<JobResponsePayload>> getAllJobs(Long userId) {
@@ -173,11 +177,6 @@ public class JobService {
         User user = userOptional.get();
         List<Job> jobs = jobRepository.findAllByUserIdOrderByTimestampDesc(userId);
         return ResponseEntity.ok(getAllJobResponsePayloads(jobs, user));
-    }
-
-    public ResponseEntity<ApiResponse> acceptJob(OfferPayload acceptJobPayload) {
-        //TODO: send mail to client
-        return offerService.saveOffer(acceptJobPayload);
     }
 
     public ResponseEntity<Job> getJobById(Long jobId) {

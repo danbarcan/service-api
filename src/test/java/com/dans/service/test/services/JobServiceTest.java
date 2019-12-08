@@ -45,9 +45,6 @@ public class JobServiceTest {
     private CarRepository carRepository;
 
     @Mock
-    private OfferService offerService;
-
-    @Mock
     private CategoryRepository categoryRepository;
 
     @Mock
@@ -55,7 +52,7 @@ public class JobServiceTest {
 
     @Before
     public void setUp() {
-        this.jobService = new JobService(jobRepository, userRepository, carRepository, offerService, categoryRepository, publisher);
+        this.jobService = new JobService(jobRepository, userRepository, carRepository, categoryRepository, publisher);
     }
 
     private User user = User.builder().email("test@test.com")
