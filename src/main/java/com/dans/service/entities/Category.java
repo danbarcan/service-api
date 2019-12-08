@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode
 @Entity
 @Table(name = "categories")
-public class Category {
+public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
