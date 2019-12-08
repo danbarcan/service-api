@@ -36,7 +36,7 @@ import static com.dans.service.entities.Category.getCategoriesFromIdList;
 public class AuthService {
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider tokenProvider;
-    private static PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private CategoryRepository categoryRepository;
@@ -48,7 +48,7 @@ public class AuthService {
                        final RoleRepository roleRepository, final CategoryRepository categoryRepository, final Publisher publisher) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = jwtTokenProvider;
-        AuthService.passwordEncoder = passwordEncoder;
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.categoryRepository = categoryRepository;
@@ -126,7 +126,7 @@ public class AuthService {
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
 
-    public static String encodePassword(String password) {
+    public String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
 

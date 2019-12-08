@@ -9,8 +9,8 @@ import com.dans.service.repositories.CarRepository;
 import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
+import com.dans.service.services.AuthService;
 import com.dans.service.services.JobService;
-import com.dans.service.services.OfferService;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -48,11 +48,14 @@ public class JobServiceTest {
     private CategoryRepository categoryRepository;
 
     @Mock
+    private AuthService authService;
+
+    @Mock
     private Publisher publisher;
 
     @Before
     public void setUp() {
-        this.jobService = new JobService(jobRepository, userRepository, carRepository, categoryRepository, publisher);
+        this.jobService = new JobService(jobRepository, userRepository, carRepository, categoryRepository, publisher, authService);
     }
 
     private User user = User.builder().email("test@test.com")
@@ -66,7 +69,6 @@ public class JobServiceTest {
 
     private Job job = Job.createJobFromJobPayload(jobPayload, user);
 
-    @Ignore
     @Test
     public void getAllReturnsListWithOneElement() {
         BDDMockito.given(this.jobRepository.findAllByOrderByTimestampDesc()).willReturn(Arrays.asList(this.job));
@@ -75,7 +77,6 @@ public class JobServiceTest {
         Assert.assertTrue(jobService.getAllJobs().getBody().contains(this.job));
     }
 
-    @Ignore
     @Test
     public void getAllReturnsEmptyList() {
         Assert.assertNotNull(jobService.getAllJobs().getBody());

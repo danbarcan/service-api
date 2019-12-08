@@ -17,7 +17,7 @@ public class Subscriber {
 
     @RabbitListener(queues = "${jsa.rabbitmq.queue}")
     public void recievedMessage(Message msg) {
-        log.info("Recieved Message: " + msg);
+        log.info("Recieved Message: {}", msg);
         switch (msg.getMessageType()) {
             case NEW_JOB:
                 mailService.sendNewJobMail(msg);
@@ -32,7 +32,7 @@ public class Subscriber {
                 mailService.sendAcceptedOfferMail(msg);
                 break;
             default:
-                log.info("Message type: " + msg.getMessageType() + " not recognized");
+                log.info("Message type: {} not recognized", msg.getMessageType());
         }
     }
 }

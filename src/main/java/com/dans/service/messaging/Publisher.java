@@ -23,6 +23,6 @@ public class Publisher {
 
     public void produceMsg(Message msg) {
         amqpTemplate.convertAndSend(exchange, routingKey, msg);
-        log.info("Send msg = " + msg);
+        log.info("Send msg = {}", msg);
     }
 }

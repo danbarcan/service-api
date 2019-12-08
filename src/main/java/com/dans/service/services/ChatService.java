@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @Service
 public class ChatService {
     private static final Logger log = LoggerFactory.getLogger(ChatService.class);
-    private static User loggedUser;
 
     private UserRepository userRepository;
     private JobRepository jobRepository;
@@ -48,10 +47,21 @@ public class ChatService {
             log.error(e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+
+        UserPrincipal userPrincipal = AppUtils.getCurrentUserDetails();
+        if (userPrincipal == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        Optional<User> userOptional = userRepository.findByUsername(userPrincipal.getUsername());
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
         Map<Long, Long> unreadMessagesByJob = messagesByJob.entrySet()
                 .stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, o -> o.getValue().stream()
-                        .filter(chatMessage -> !chatMessage.getFromUser().equals(loggedUser) && !chatMessage.getRead()).count()));
+                        .filter(chatMessage -> !chatMessage.getFromUser().equals(userOptional.get()) && !chatMessage.getRead()).count()));
 
         return ResponseEntity.status(HttpStatus.OK).body(unreadMessagesByJob);
     }
@@ -164,8 +174,7 @@ public class ChatService {
             throw new NotFoundException("User not found");
         }
 
-        loggedUser = userOptional.get();
-        List<Job> jobs = jobRepository.findAllByUserOrAcceptedServiceOrderByTimestampDesc(loggedUser, loggedUser);
+        List<Job> jobs = jobRepository.findAllByUserOrAcceptedServiceOrderByTimestampDesc(userOptional.get(), userOptional.get());
 
         List<ChatMessage> chatMessages = chatRepository.findAllByJobIn(jobs);
         return chatMessages.stream().collect(Collectors.groupingBy(message -> message.getJob().getId()));

@@ -40,14 +40,16 @@ public class JobService {
     private CarRepository carRepository;
     private CategoryRepository categoryRepository;
     private Publisher publisher;
+    private AuthService authService;
 
     @Autowired
-    public JobService(final JobRepository jobRepository, final UserRepository userRepository, final CarRepository carRepository, final CategoryRepository categoryRepository, final Publisher publisher) {
+    public JobService(final JobRepository jobRepository, final UserRepository userRepository, final CarRepository carRepository, final CategoryRepository categoryRepository, final Publisher publisher, final AuthService authService) {
         this.jobRepository = jobRepository;
         this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.categoryRepository = categoryRepository;
         this.publisher = publisher;
+        this.authService = authService;
     }
 
     public ResponseEntity<List<JobResponsePayload>> saveJob(JobPayload jobPayload) {
@@ -95,7 +97,7 @@ public class JobService {
                 .phoneNumber("0")
                 .name(jobPayload.getEmail())
                 .email(jobPayload.getEmail())
-                .password(AuthService.encodePassword(RandomString.make(10)))
+                .password(authService.encodePassword(RandomString.make(10)))
                 .build();
 
         Car car = Car.builder()
