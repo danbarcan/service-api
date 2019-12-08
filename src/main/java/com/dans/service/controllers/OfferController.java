@@ -24,19 +24,19 @@ public class OfferController {
 
     @PostMapping("/services/offer")
     @PreAuthorize("hasRole('ROLE_SERVICE')")
-    public ResponseEntity<ApiResponse> saveOffer(@Valid @RequestBody OfferPayload offerPayload) {
+    public ResponseEntity<List<Offer>> saveOffer(@Valid @RequestBody OfferPayload offerPayload) {
         return offerService.saveOffer(offerPayload);
     }
 
     @PostMapping("/services/updateOffer")
     @PreAuthorize("hasRole('ROLE_SERVICE')")
-    public ResponseEntity<ApiResponse> updateOffer(@Valid @RequestBody OfferPayload offerPayload) {
+    public ResponseEntity<List<Offer>> updateOffer(@Valid @RequestBody OfferPayload offerPayload) {
         return offerService.updateOffer(offerPayload);
     }
 
     @GetMapping("/services/deleteOffer")
     @PreAuthorize("hasRole('ROLE_SERVICE')")
-    public ResponseEntity<ApiResponse> deleteOffer(@RequestParam Long offerId) {
+    public ResponseEntity<List<Offer>> deleteOffer(@RequestParam Long offerId) {
         return offerService.deleteOffer(offerId);
     }
 
@@ -48,13 +48,13 @@ public class OfferController {
 
     @GetMapping("/users/allOffers")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<Offer>> getAllJobs() {
+    public ResponseEntity<List<Offer>> getAllOffers() {
         return offerService.getAllOffers();
     }
 
     @GetMapping("/users/offers")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<Offer>> getAllJobs(@RequestParam Long userId) {
+    public ResponseEntity<List<Offer>> getAllOffers(@RequestParam Long userId) {
         return offerService.getAllOffersByUser(userId);
     }
 }

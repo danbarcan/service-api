@@ -35,16 +35,16 @@ public class OfferService {
         this.publisher = publisher;
     }
 
-    public ResponseEntity<ApiResponse> saveOffer(OfferPayload offerPayload) {
+    public ResponseEntity<List<Offer>> saveOffer(OfferPayload offerPayload) {
         Optional<User> service = userRepository.findById(offerPayload.getServiceId());
 
         if (!service.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse(false, "UNAUTHORIZED"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         Optional<Job> job = jobRepository.findById(offerPayload.getJobId());
         if (!job.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Job not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         Offer offer = Offer.createOfferFromPayload(offerPayload, service.get(), job.get());
@@ -53,13 +53,13 @@ public class OfferService {
 
         publisher.produceMsg(createNewOfferMessage(offer));
 
-        return ResponseEntity.ok(new ApiResponse(true, "Offer successfully saved"));
+        return getAllOffers();
     }
 
-    public ResponseEntity<ApiResponse> updateOffer(OfferPayload offerPayload) {
+    public ResponseEntity<List<Offer>> updateOffer(OfferPayload offerPayload) {
         Optional<Offer> offerOptional = offerRepository.findById(offerPayload.getId());
         if (!offerOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Offer not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         Offer offer = offerOptional.get();
@@ -67,7 +67,7 @@ public class OfferService {
 
         offerRepository.save(offer);
 
-        return ResponseEntity.ok(new ApiResponse(true, "Offer successfully updated"));
+        return getAllOffers();
     }
 
     public ResponseEntity<ApiResponse> acceptOffer(Long offerId) {
@@ -92,16 +92,16 @@ public class OfferService {
         return ResponseEntity.ok(new ApiResponse(true, "Offer successfully accepted"));
     }
 
-    public ResponseEntity<ApiResponse> deleteOffer(Long offerId) {
+    public ResponseEntity<List<Offer>> deleteOffer(Long offerId) {
         Optional<Offer> offerOptional = offerRepository.findById(offerId);
         if (!offerOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Offer not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         Offer offer = offerOptional.get();
         offerRepository.delete(offer);
 
-        return ResponseEntity.ok(new ApiResponse(true, "Offer successfully deleted"));
+        return getAllOffers();
     }
 
     public ResponseEntity<List<Offer>> getAllOffers() {
