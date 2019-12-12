@@ -41,10 +41,8 @@ public class SignUpPayload {
 
     private String cui;
 
-    @NotNull
     private BigDecimal lat;
 
-    @NotNull
     private BigDecimal lng;
 
     private Long[] categories;
