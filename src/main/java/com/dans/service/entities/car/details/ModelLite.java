@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -14,39 +15,25 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Type_year")
-public class TypeYear {
+@Table(name = "Models")
+public class ModelLite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
 
-    @OneToMany(
-            mappedBy = "typeYear",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER
-    )
-    private List<Details> details;
-    @JsonIgnore
-    private String url;
-    @JsonIgnore
-    private String imageUrl;
-
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "model_id")
-    private Model model;
+    @JoinColumn(name = "manufacturer_id")
+    private Manufacturer manufacturer;
+
 
     @Override
     public String toString() {
-        return "TypeYear{" +
+        return "Model{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", details=" + details +
-                ", url='" + url + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 }

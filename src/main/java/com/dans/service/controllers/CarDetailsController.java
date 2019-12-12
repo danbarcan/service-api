@@ -1,9 +1,6 @@
 package com.dans.service.controllers;
 
-import com.dans.service.entities.car.details.Details;
-import com.dans.service.entities.car.details.Manufacturer;
-import com.dans.service.entities.car.details.Model;
-import com.dans.service.entities.car.details.TypeYear;
+import com.dans.service.entities.car.details.*;
 import com.dans.service.services.CarDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +33,21 @@ public class CarDetailsController {
     @GetMapping("/public/allTypeYearsByModelId")
     public ResponseEntity<List<TypeYear>> getAllTypeYearsByModelId(@RequestParam Long modelId) {
         return carDetailsService.getAllTypeYearsByModel(modelId);
+    }
+
+    @GetMapping("/public/liteManufacturers")
+    public ResponseEntity<List<ManufacturerLite>> getAllManufacturersLite() {
+        return carDetailsService.getAllManufacturersLite();
+    }
+
+    @GetMapping("/public/liteModelsByManufacturerId")
+    public ResponseEntity<List<ModelLite>> getAllModelsByManufacturerLiteId(@RequestParam Long manufacturerId) {
+        return carDetailsService.getAllCarModelsByManufacturerLite(manufacturerId);
+    }
+
+    @GetMapping("/public/liteTypeYearsByModelId")
+    public ResponseEntity<List<TypeYearLite>> getAllTypeYearsByModelLiteId(@RequestParam Long modelId) {
+        return carDetailsService.getAllTypeYearsByModelLite(modelId);
     }
 
     @GetMapping("/public/allDetailsByTypeYearId")

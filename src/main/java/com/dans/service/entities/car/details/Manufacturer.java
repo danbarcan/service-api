@@ -1,5 +1,6 @@
 package com.dans.service.entities.car.details;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +22,9 @@ public class Manufacturer {
     private long id;
 
     private String name;
+    @JsonIgnore
     private String url;
+    @JsonIgnore
     private String imageUrl;
 
     @OneToMany(

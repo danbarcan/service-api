@@ -15,24 +15,12 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name = "Type_year")
-public class TypeYear {
+public class TypeYearLite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
-
-    @OneToMany(
-            mappedBy = "typeYear",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER
-    )
-    private List<Details> details;
-    @JsonIgnore
-    private String url;
-    @JsonIgnore
-    private String imageUrl;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
@@ -44,9 +32,6 @@ public class TypeYear {
         return "TypeYear{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", details=" + details +
-                ", url='" + url + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
                 '}';
     }
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface DetailsRepository extends JpaRepository<Details, Long> {
-    List<Details> findAllByTypeYear_Id(long typeYearId);
+    List<Details> findAllByTypeYear_IdOrderByType(long typeYearId);
 }

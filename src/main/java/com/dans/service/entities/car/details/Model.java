@@ -22,7 +22,9 @@ public class Model {
     private long id;
 
     private String name;
+    @JsonIgnore
     private String url;
+    @JsonIgnore
     private String imageUrl;
 
     @OneToMany(

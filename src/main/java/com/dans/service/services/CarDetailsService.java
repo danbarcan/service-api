@@ -1,13 +1,7 @@
 package com.dans.service.services;
 
-import com.dans.service.entities.car.details.Details;
-import com.dans.service.entities.car.details.Manufacturer;
-import com.dans.service.entities.car.details.Model;
-import com.dans.service.entities.car.details.TypeYear;
-import com.dans.service.repositories.car.details.DetailsRepository;
-import com.dans.service.repositories.car.details.ManufacturerRepository;
-import com.dans.service.repositories.car.details.ModelRepository;
-import com.dans.service.repositories.car.details.TypeYearRepository;
+import com.dans.service.entities.car.details.*;
+import com.dans.service.repositories.car.details.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,12 +16,19 @@ public class CarDetailsService {
     private TypeYearRepository typeYearRepository;
     private DetailsRepository detailsRepository;
 
+    private ManufacturerLiteRepository manufacturerLiteRepository;
+    private ModelLiteRepository modelLiteRepository;
+    private TypeYearLiteRepository typeYearLiteRepository;
+
     @Autowired
-    public CarDetailsService(final ManufacturerRepository manufacturerRepository, final ModelRepository modelRepository, TypeYearRepository typeYearRepository, DetailsRepository detailsRepository) {
+    public CarDetailsService(ManufacturerRepository manufacturerRepository, ModelRepository modelRepository, TypeYearRepository typeYearRepository, DetailsRepository detailsRepository, ManufacturerLiteRepository manufacturerLiteRepository, ModelLiteRepository modelLiteRepository, TypeYearLiteRepository typeYearLiteRepository) {
         this.manufacturerRepository = manufacturerRepository;
         this.modelRepository = modelRepository;
         this.typeYearRepository = typeYearRepository;
         this.detailsRepository = detailsRepository;
+        this.manufacturerLiteRepository = manufacturerLiteRepository;
+        this.modelLiteRepository = modelLiteRepository;
+        this.typeYearLiteRepository = typeYearLiteRepository;
     }
 
     public ResponseEntity<List<Manufacturer>> getAllCarDetails() {
@@ -43,6 +44,18 @@ public class CarDetailsService {
     }
 
     public ResponseEntity<List<Details>> getAllCarDetailsByTypeYear(long typeYearId) {
-        return ResponseEntity.ok(detailsRepository.findAllByTypeYear_Id(typeYearId));
+        return ResponseEntity.ok(detailsRepository.findAllByTypeYear_IdOrderByType(typeYearId));
+    }
+
+    public ResponseEntity<List<ManufacturerLite>> getAllManufacturersLite() {
+        return ResponseEntity.ok(manufacturerLiteRepository.findAllByOrderByName());
+    }
+
+    public ResponseEntity<List<ModelLite>> getAllCarModelsByManufacturerLite(long manufacturerId) {
+        return ResponseEntity.ok(modelLiteRepository.findAllByManufacturer_IdOrderByName(manufacturerId));
+    }
+
+    public ResponseEntity<List<TypeYearLite>> getAllTypeYearsByModelLite(long modelId) {
+        return ResponseEntity.ok(typeYearLiteRepository.findAllByModel_IdOrderByName(modelId));
     }
 }
