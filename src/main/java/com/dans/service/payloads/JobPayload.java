@@ -29,11 +29,7 @@ public class JobPayload {
     @NotBlank
     private String description;
 
-    private String model;
-
-    private String make;
-
-    private Integer year;
+    private Long detailsId;
 
     @NotEmpty
     private Long[] categories;

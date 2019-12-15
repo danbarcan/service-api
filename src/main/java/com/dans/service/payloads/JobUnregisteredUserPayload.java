@@ -14,16 +14,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class JobUnregisteredUserPayload {
 
-    @NotBlank
-    private String make;
-
     private Long categoryId;
 
-    @NotBlank
-    private String model;
-
     @NotNull
-    private Integer year;
+    private Long detailsId;
 
     @NotBlank
     private String description;

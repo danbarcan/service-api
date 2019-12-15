@@ -8,7 +8,9 @@ import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.CarPayload;
 import com.dans.service.repositories.CarRepository;
 import com.dans.service.repositories.UserRepository;
+import com.dans.service.repositories.car.details.DetailsRepository;
 import com.dans.service.services.CarService;
+import org.hamcrest.core.AnyOf;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,6 +40,9 @@ public class CarServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private DetailsRepository detailsRepository;
+
     private User user = User.builder().email("test@test.com")
             .password("password")
             .name("test")
@@ -46,13 +51,13 @@ public class CarServiceTest {
             .role(Role.builder().name(RoleName.ROLE_USER).build())
             .build();
 
-    private CarPayload carPayload = new CarPayload(-1L, "test", "test", "2000", 1L);
+    private CarPayload carPayload = new CarPayload(-1L, null);
 
-    private Car car = Car.createCarFromPayload(carPayload, user);
+    private Car car = Car.builder().details(null).user(user).build();
 
     @Before
     public void setUp() {
-        carService = new CarService(carRepository, userRepository);
+        carService = new CarService(carRepository, userRepository, detailsRepository);
     }
 
     @Test
@@ -75,7 +80,7 @@ public class CarServiceTest {
 
     @Test
     public void saveCarSuccess() {
-        BDDMockito.given(this.userRepository.findById(carPayload.getUserId())).willReturn(Optional.of(this.user));
+        BDDMockito.given(this.userRepository.findById(BDDMockito.anyLong())).willReturn(Optional.of(this.user));
 
         Assert.assertThat(carService.saveCar(carPayload), Is.is(ResponseEntity.ok(new ApiResponse(true, "Car saved"))));
     }

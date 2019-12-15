@@ -32,9 +32,7 @@ public class CarRepositoryTest {
             .build();
 
     private Car car = Car.builder()
-            .make("Mercedes")
-            .model("GLA")
-            .year(1000)
+            .details(null)
             .user(user)
             .build();
 

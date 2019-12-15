@@ -15,16 +15,6 @@ public class CarPayload {
 
     private Long id;
 
-    @NotBlank
-    private String make;
-
-    @NotBlank
-    private String model;
-
-    @NotBlank
-    @Size(min = 4, max = 4)
-    private String year;
-
     @NotNull
-    private Long userId;
+    private Long detailsId;
 }

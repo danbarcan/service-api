@@ -2,9 +2,13 @@ package com.dans.service.services;
 
 import com.dans.service.entities.Car;
 import com.dans.service.entities.User;
+import com.dans.service.entities.car.details.Details;
 import com.dans.service.payloads.CarPayload;
 import com.dans.service.repositories.CarRepository;
 import com.dans.service.repositories.UserRepository;
+import com.dans.service.repositories.car.details.DetailsRepository;
+import com.dans.service.security.UserPrincipal;
+import com.dans.service.utils.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +22,13 @@ public class CarService {
 
     private CarRepository carRepository;
     private UserRepository userRepository;
+    private DetailsRepository detailsRepository;
 
     @Autowired
-    public CarService(final CarRepository carRepository, final UserRepository userRepository) {
+    public CarService(final CarRepository carRepository, final UserRepository userRepository, final DetailsRepository detailsRepository) {
         this.carRepository = carRepository;
         this.userRepository = userRepository;
+        this.detailsRepository = detailsRepository;
     }
 
     public ResponseEntity<List<Car>> getAllCarsForCurrentUser(Long userId) {
@@ -30,12 +36,21 @@ public class CarService {
     }
 
     public ResponseEntity<List<Car>> saveCar(CarPayload carPayload) {
-        Optional<User> user = userRepository.findById(carPayload.getUserId());
-
+        UserPrincipal userPrincipal = AppUtils.getCurrentUserDetails();
+        Optional<User> user = userRepository.findById(userPrincipal.getId());
         if (!user.isPresent()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        Car car = Car.createCarFromPayload(carPayload, user.get());
+
+        Optional<Details> details = detailsRepository.findById(carPayload.getDetailsId());
+        if (!details.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        Car car = Car.builder()
+                .user(user.get())
+                .details(details.get())
+                .build();
 
         carRepository.save(car);
 
@@ -43,17 +58,33 @@ public class CarService {
     }
 
     public ResponseEntity<List<Car>> updateCar(CarPayload carPayload) {
-        Optional<Car> carOptional = carRepository.findById(carPayload.getId());
+        UserPrincipal userPrincipal = AppUtils.getCurrentUserDetails();
+        Optional<User> user = userRepository.findById(userPrincipal.getId());
+        if (!user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
 
+        Optional<Car> carOptional = carRepository.findById(carPayload.getId());
         if (!carOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
         Car car = carOptional.get();
 
-        car.updateFieldsWithPayloadData(carPayload);
+        if (!car.getUser().getId().equals(user.get().getId())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
 
-        carRepository.save(car);
+        if (!car.getDetails().getId().equals(carPayload.getDetailsId())){
+            Optional<Details> details = detailsRepository.findById(carPayload.getDetailsId());
+
+            if (!details.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+            car.setDetails(details.get());
+
+            carRepository.save(car);
+        }
 
         return ResponseEntity.ok(carRepository.findAllByUserId(car.getUser().getId()));
     }
@@ -66,6 +97,10 @@ public class CarService {
         }
 
         Car car = carOptional.get();
+        UserPrincipal userPrincipal = AppUtils.getCurrentUserDetails();
+        if (!userPrincipal.getId().equals(car.getUser().getId())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
         carRepository.delete(car);
 
         return ResponseEntity.ok(carRepository.findAllByUserId(car.getUser().getId()));

@@ -4,6 +4,7 @@ import com.dans.service.entities.Car;
 import com.dans.service.entities.Job;
 import com.dans.service.entities.PartsType;
 import com.dans.service.entities.User;
+import com.dans.service.entities.car.details.Details;
 import com.dans.service.messaging.Publisher;
 import com.dans.service.messaging.entities.Message;
 import com.dans.service.messaging.entities.MessageType;
@@ -15,6 +16,7 @@ import com.dans.service.repositories.CarRepository;
 import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
+import com.dans.service.repositories.car.details.DetailsRepository;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,15 +41,17 @@ public class JobService {
     private UserRepository userRepository;
     private CarRepository carRepository;
     private CategoryRepository categoryRepository;
+    private DetailsRepository detailsRepository;
     private Publisher publisher;
     private AuthService authService;
 
     @Autowired
-    public JobService(final JobRepository jobRepository, final UserRepository userRepository, final CarRepository carRepository, final CategoryRepository categoryRepository, final Publisher publisher, final AuthService authService) {
+    public JobService(final JobRepository jobRepository, final UserRepository userRepository, final CarRepository carRepository, final CategoryRepository categoryRepository, final DetailsRepository detailsRepository, final Publisher publisher, final AuthService authService) {
         this.jobRepository = jobRepository;
         this.userRepository = userRepository;
         this.carRepository = carRepository;
         this.categoryRepository = categoryRepository;
+        this.detailsRepository = detailsRepository;
         this.publisher = publisher;
         this.authService = authService;
     }
@@ -69,10 +73,13 @@ public class JobService {
         if (carOptional.isPresent()) {
             car = carOptional.get();
         } else {
+            Optional<Details> details = detailsRepository.findById(jobPayload.getDetailsId());
+
+            if (!details.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
             car = Car.builder()
-                    .model(jobPayload.getModel())
-                    .make(jobPayload.getMake())
-                    .year(jobPayload.getYear())
+                    .details(details.get())
                     .user(user)
                     .build();
 
@@ -100,10 +107,14 @@ public class JobService {
                 .password(authService.encodePassword(RandomString.make(10)))
                 .build();
 
+        Optional<Details> details = detailsRepository.findById(jobPayload.getDetailsId());
+
+        if (!details.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
         Car car = Car.builder()
-                .model(jobPayload.getModel())
-                .make(jobPayload.getMake())
-                .year(jobPayload.getYear())
+                .details(details.get())
                 .user(user)
                 .build();
 

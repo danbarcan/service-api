@@ -1,5 +1,6 @@
 package com.dans.service.entities;
 
+import com.dans.service.entities.car.details.Details;
 import com.dans.service.payloads.CarPayload;
 import lombok.*;
 
@@ -20,33 +21,13 @@ public class Car implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    private String make;
-
-    @NotBlank
-    private String model;
-
-    private Integer year;
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "details_id")
+    private Details details;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-
-    public static Car createCarFromPayload(CarPayload carPayload, User user) {
-        return Car.builder()
-                .make(carPayload.getMake())
-                .model(carPayload.getModel())
-                .year(Integer.parseInt(carPayload.getYear()))
-                .user(user)
-                .build();
-    }
-
-    public Car updateFieldsWithPayloadData(CarPayload carPayload) {
-        this.make = carPayload.getMake();
-        this.model = carPayload.getModel();
-        this.year = Integer.parseInt(carPayload.getYear());
-
-        return this;
-    }
 }

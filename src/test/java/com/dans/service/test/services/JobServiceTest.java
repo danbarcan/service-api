@@ -9,6 +9,7 @@ import com.dans.service.repositories.CarRepository;
 import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
+import com.dans.service.repositories.car.details.DetailsRepository;
 import com.dans.service.services.AuthService;
 import com.dans.service.services.JobService;
 import org.hamcrest.core.Is;
@@ -48,6 +49,9 @@ public class JobServiceTest {
     private CategoryRepository categoryRepository;
 
     @Mock
+    private DetailsRepository detailsRepository;
+
+    @Mock
     private AuthService authService;
 
     @Mock
@@ -55,7 +59,7 @@ public class JobServiceTest {
 
     @Before
     public void setUp() {
-        this.jobService = new JobService(jobRepository, userRepository, carRepository, categoryRepository, publisher, authService);
+        this.jobService = new JobService(jobRepository, userRepository, carRepository, categoryRepository, detailsRepository, publisher, authService);
     }
 
     private User user = User.builder().email("test@test.com")
@@ -65,7 +69,7 @@ public class JobServiceTest {
             .phoneNumber("07test")
             .build();
 
-    private JobPayload jobPayload = new JobPayload(-1L, 1L, new BigDecimal(42.4566), new BigDecimal(32.4566), null, "test", "model", "make", 2000, new Long[]{1L, 2L});
+    private JobPayload jobPayload = new JobPayload(-1L, 1L, new BigDecimal(42.4566), new BigDecimal(32.4566), null, "test", null, new Long[]{1L, 2L});
 
     private Job job = Job.createJobFromJobPayload(jobPayload, user);
 
