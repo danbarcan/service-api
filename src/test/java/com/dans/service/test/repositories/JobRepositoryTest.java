@@ -4,6 +4,8 @@ import com.dans.service.entities.Car;
 import com.dans.service.entities.Job;
 import com.dans.service.entities.PartsType;
 import com.dans.service.entities.User;
+import com.dans.service.entities.car.details.Details;
+import com.dans.service.entities.car.details.Manufacturer;
 import com.dans.service.repositories.JobRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -29,6 +31,8 @@ public class JobRepositoryTest {
     @Autowired
     private JobRepository jobRepository;
 
+    private Details details = Details.builder().build();
+
     private User user = User.builder().email("test@test.com")
             .password("password")
             .name("test")
@@ -37,7 +41,7 @@ public class JobRepositoryTest {
             .build();
 
     private Car car = Car.builder()
-            .details(null)
+            .details(details)
             .user(user)
             .build();
 
@@ -54,6 +58,7 @@ public class JobRepositoryTest {
     @Test
     public void findAllShouldReturnJobs() {
         this.entityManager.persist(user);
+        this.entityManager.persist(details);
         this.entityManager.persist(car);
         this.entityManager.persist(job);
         List<Job> jobs = jobRepository.findAll();
@@ -69,6 +74,7 @@ public class JobRepositoryTest {
     @Test
     public void findByIdShouldReturnJob() {
         this.entityManager.persist(user);
+        this.entityManager.persist(details);
         this.entityManager.persist(car);
         this.entityManager.persist(job);
         List<Job> jobs = this.jobRepository.findAll();

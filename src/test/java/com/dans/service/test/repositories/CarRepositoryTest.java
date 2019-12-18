@@ -2,6 +2,7 @@ package com.dans.service.test.repositories;
 
 import com.dans.service.entities.Car;
 import com.dans.service.entities.User;
+import com.dans.service.entities.car.details.Details;
 import com.dans.service.repositories.CarRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -31,14 +32,17 @@ public class CarRepositoryTest {
             .phoneNumber("07test")
             .build();
 
+    private Details details = Details.builder().build();
+
     private Car car = Car.builder()
-            .details(null)
+            .details(details)
             .user(user)
             .build();
 
     @Test
     public void findAllShouldReturnCars() {
         this.entityManager.persist(user);
+        this.entityManager.persist(details);
         this.entityManager.persist(car);
         List<Car> cars = carRepository.findAll();
         Assertions.assertThat(cars != null && cars.size() == 1).isTrue();
@@ -53,6 +57,7 @@ public class CarRepositoryTest {
     @Test
     public void findByIdShouldReturnCar() {
         this.entityManager.persist(user);
+        this.entityManager.persist(details);
         this.entityManager.persist(car);
         List<Car> cars = this.carRepository.findAll();
         Car car1 = cars.get(0);
@@ -70,6 +75,7 @@ public class CarRepositoryTest {
     @Test
     public void findByUserIdShouldReturnCars() {
         this.entityManager.persist(user);
+        this.entityManager.persist(details);
         this.entityManager.persist(car);
         List<Car> cars = carRepository.findAllByUserId(user.getId());
         Assertions.assertThat(cars != null && cars.size() == 1).isTrue();

@@ -1,6 +1,7 @@
 package com.dans.service.test.repositories;
 
 import com.dans.service.entities.*;
+import com.dans.service.entities.car.details.Details;
 import com.dans.service.repositories.ReviewRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -49,8 +50,10 @@ public class ReviewRepositoryTest {
             .phoneNumber("07test")
             .build();
 
+    private Details details = Details.builder().build();
+
     private Car car = Car.builder()
-            .details(null)
+            .details(details)
             .user(user)
             .build();
 
@@ -77,6 +80,7 @@ public class ReviewRepositoryTest {
     public void findAllShouldReturnReviews() {
         this.entityManager.persist(service);
         this.entityManager.persist(user);
+        this.entityManager.persist(details);
         this.entityManager.persist(car);
         this.entityManager.persist(job);
         this.entityManager.persist(review);
@@ -94,6 +98,7 @@ public class ReviewRepositoryTest {
     public void findByIdShouldReturnReview() {
         this.entityManager.persist(service);
         this.entityManager.persist(user);
+        this.entityManager.persist(details);
         this.entityManager.persist(car);
         this.entityManager.persist(job);
         this.entityManager.persist(review);

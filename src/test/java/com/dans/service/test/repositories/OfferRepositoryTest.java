@@ -1,6 +1,7 @@
 package com.dans.service.test.repositories;
 
 import com.dans.service.entities.*;
+import com.dans.service.entities.car.details.Details;
 import com.dans.service.repositories.OfferRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -40,8 +41,10 @@ public class OfferRepositoryTest {
             .phoneNumber("07test")
             .build();
 
+    private Details details = Details.builder().build();
+
     private Car car = Car.builder()
-            .details(null)
+            .details(details)
             .user(user)
             .build();
 
@@ -68,6 +71,7 @@ public class OfferRepositoryTest {
     public void findAllShouldReturnOffers() {
         this.entityManager.persist(user);
         this.entityManager.persist(service);
+        this.entityManager.persist(details);
         this.entityManager.persist(car);
         this.entityManager.persist(job);
         this.entityManager.persist(offer);
@@ -85,6 +89,7 @@ public class OfferRepositoryTest {
     public void findByIdShouldReturnOffer() {
         this.entityManager.persist(user);
         this.entityManager.persist(service);
+        this.entityManager.persist(details);
         this.entityManager.persist(car);
         this.entityManager.persist(job);
         this.entityManager.persist(offer);
