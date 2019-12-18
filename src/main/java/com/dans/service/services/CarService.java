@@ -5,6 +5,7 @@ import com.dans.service.entities.User;
 import com.dans.service.entities.car.details.Details;
 import com.dans.service.payloads.CarPayload;
 import com.dans.service.repositories.CarRepository;
+import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.repositories.car.details.DetailsRepository;
 import com.dans.service.security.UserPrincipal;
@@ -23,12 +24,14 @@ public class CarService {
     private CarRepository carRepository;
     private UserRepository userRepository;
     private DetailsRepository detailsRepository;
+    private JobRepository jobRepository;
 
     @Autowired
-    public CarService(final CarRepository carRepository, final UserRepository userRepository, final DetailsRepository detailsRepository) {
+    public CarService(final CarRepository carRepository, final UserRepository userRepository, final DetailsRepository detailsRepository, final JobRepository jobRepository) {
         this.carRepository = carRepository;
         this.userRepository = userRepository;
         this.detailsRepository = detailsRepository;
+        this.jobRepository = jobRepository;
     }
 
     public ResponseEntity<List<Car>> getAllCarsForCurrentUser(Long userId) {
@@ -101,7 +104,8 @@ public class CarService {
         if (!userPrincipal.getId().equals(car.getUser().getId())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
-        carRepository.delete(car);
+        car.getJobs().forEach(job -> jobRepository.delete(job));
+        carRepository.deleteById(carId);
 
         return ResponseEntity.ok(carRepository.findAllByUserId(car.getUser().getId()));
     }

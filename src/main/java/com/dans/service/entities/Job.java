@@ -3,6 +3,8 @@ package com.dans.service.entities;
 import com.dans.service.payloads.JobPayload;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -53,6 +55,7 @@ public class Job implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     Set<Category> categories;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "car_id")
     private Car car;

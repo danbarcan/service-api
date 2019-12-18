@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.io.Serializable;
 
@@ -22,6 +24,8 @@ public class Message implements Serializable {
     private String username;
     private String name;
 
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Job job;
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Offer offer;
 }

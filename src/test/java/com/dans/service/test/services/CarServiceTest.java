@@ -7,6 +7,7 @@ import com.dans.service.entities.User;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.CarPayload;
 import com.dans.service.repositories.CarRepository;
+import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.repositories.car.details.DetailsRepository;
 import com.dans.service.services.CarService;
@@ -43,6 +44,9 @@ public class CarServiceTest {
     @Mock
     private DetailsRepository detailsRepository;
 
+    @Mock
+    private JobRepository jobRepository;
+
     private User user = User.builder().email("test@test.com")
             .password("password")
             .name("test")
@@ -57,7 +61,7 @@ public class CarServiceTest {
 
     @Before
     public void setUp() {
-        carService = new CarService(carRepository, userRepository, detailsRepository);
+        carService = new CarService(carRepository, userRepository, detailsRepository, jobRepository);
     }
 
     @Test

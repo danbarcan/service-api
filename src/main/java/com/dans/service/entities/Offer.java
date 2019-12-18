@@ -3,6 +3,8 @@ package com.dans.service.entities;
 import com.dans.service.payloads.OfferPayload;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -44,6 +46,7 @@ public class Offer implements Serializable {
 
     @NotNull
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "job_id")
     @EqualsAndHashCode.Exclude
