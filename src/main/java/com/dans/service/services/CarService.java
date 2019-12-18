@@ -4,6 +4,7 @@ import com.dans.service.entities.Car;
 import com.dans.service.entities.User;
 import com.dans.service.entities.car.details.Details;
 import com.dans.service.payloads.CarPayload;
+import com.dans.service.payloads.CarResponsePayload;
 import com.dans.service.repositories.CarRepository;
 import com.dans.service.repositories.JobRepository;
 import com.dans.service.repositories.UserRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CarService {
@@ -34,11 +36,11 @@ public class CarService {
         this.jobRepository = jobRepository;
     }
 
-    public ResponseEntity<List<Car>> getAllCarsForCurrentUser(Long userId) {
-        return ResponseEntity.ok(carRepository.findAllByUserId(userId));
+    public ResponseEntity<List<CarResponsePayload>> getAllCarsForCurrentUser(Long userId) {
+        return ResponseEntity.ok(mapListOfCarsToResponse(carRepository.findAllByUserId(userId)));
     }
 
-    public ResponseEntity<List<Car>> saveCar(CarPayload carPayload) {
+    public ResponseEntity<List<CarResponsePayload>> saveCar(CarPayload carPayload) {
         UserPrincipal userPrincipal = AppUtils.getCurrentUserDetails();
         Optional<User> user = userRepository.findById(userPrincipal.getId());
         if (!user.isPresent()) {
@@ -57,10 +59,10 @@ public class CarService {
 
         carRepository.save(car);
 
-        return ResponseEntity.ok(carRepository.findAllByUserId(user.get().getId()));
+        return ResponseEntity.ok(mapListOfCarsToResponse(carRepository.findAllByUserId(user.get().getId())));
     }
 
-    public ResponseEntity<List<Car>> updateCar(CarPayload carPayload) {
+    public ResponseEntity<List<CarResponsePayload>> updateCar(CarPayload carPayload) {
         UserPrincipal userPrincipal = AppUtils.getCurrentUserDetails();
         Optional<User> user = userRepository.findById(userPrincipal.getId());
         if (!user.isPresent()) {
@@ -78,7 +80,7 @@ public class CarService {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        if (!car.getDetails().getId().equals(carPayload.getDetailsId())){
+        if (!car.getDetails().getId().equals(carPayload.getDetailsId())) {
             Optional<Details> details = detailsRepository.findById(carPayload.getDetailsId());
 
             if (!details.isPresent()) {
@@ -89,10 +91,10 @@ public class CarService {
             carRepository.save(car);
         }
 
-        return ResponseEntity.ok(carRepository.findAllByUserId(car.getUser().getId()));
+        return ResponseEntity.ok(mapListOfCarsToResponse(carRepository.findAllByUserId(car.getUser().getId())));
     }
 
-    public ResponseEntity<List<Car>> deleteCar(Long carId) {
+    public ResponseEntity<List<CarResponsePayload>> deleteCar(Long carId) {
         Optional<Car> carOptional = carRepository.findById(carId);
 
         if (!carOptional.isPresent()) {
@@ -107,6 +109,10 @@ public class CarService {
         car.getJobs().forEach(job -> jobRepository.delete(job));
         carRepository.deleteById(carId);
 
-        return ResponseEntity.ok(carRepository.findAllByUserId(car.getUser().getId()));
+        return ResponseEntity.ok(mapListOfCarsToResponse(carRepository.findAllByUserId(car.getUser().getId())));
+    }
+
+    private List<CarResponsePayload> mapListOfCarsToResponse(List<Car> cars) {
+        return cars.stream().map(car -> CarResponsePayload.createJobResponsePayloadFromJob(car)).collect(Collectors.toList());
     }
 }

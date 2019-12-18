@@ -4,6 +4,7 @@ import com.dans.service.controllers.CarController;
 import com.dans.service.entities.Car;
 import com.dans.service.payloads.ApiResponse;
 import com.dans.service.payloads.CarPayload;
+import com.dans.service.payloads.CarResponsePayload;
 import com.dans.service.services.CarService;
 import org.hamcrest.core.Is;
 import org.junit.Assert;
@@ -42,22 +43,22 @@ public class CarControllerTest {
 
     @Test
     public void saveCar() {
-        BDDMockito.given(this.carService.saveCar(this.carPayload)).willReturn(ResponseEntity.ok(Arrays.asList(new Car[] {car})));
+        BDDMockito.given(this.carService.saveCar(this.carPayload)).willReturn(ResponseEntity.ok(Arrays.asList(new CarResponsePayload[] {CarResponsePayload.createJobResponsePayloadFromJob(car)})));
 
-        Assert.assertThat(this.carController.saveCar(this.carPayload), Is.is(ResponseEntity.ok(ResponseEntity.ok(Arrays.asList(new Car[] {car})))));
+        Assert.assertThat(this.carController.saveCar(this.carPayload), Is.is(ResponseEntity.ok(ResponseEntity.ok(Arrays.asList(new CarResponsePayload[] {CarResponsePayload.createJobResponsePayloadFromJob(car)})))));
     }
 
     @Test
     public void updateCar() {
-        BDDMockito.given(this.carService.updateCar(this.carPayload)).willReturn(ResponseEntity.ok(Arrays.asList(new Car[] {car})));
+        BDDMockito.given(this.carService.updateCar(this.carPayload)).willReturn(ResponseEntity.ok(Arrays.asList(new CarResponsePayload[] {CarResponsePayload.createJobResponsePayloadFromJob(car)})));
 
-        Assert.assertThat(this.carController.updateCar(this.carPayload), Is.is(ResponseEntity.ok(Arrays.asList(new Car[] {car}))));
+        Assert.assertThat(this.carController.updateCar(this.carPayload), Is.is(ResponseEntity.ok(Arrays.asList(new CarResponsePayload[] {CarResponsePayload.createJobResponsePayloadFromJob(car)}))));
     }
 
     @Test
     public void getAllCars() {
-        BDDMockito.given(this.carService.getAllCarsForCurrentUser(BDDMockito.anyLong())).willReturn(ResponseEntity.ok(Arrays.asList(new Car())));
+        BDDMockito.given(this.carService.getAllCarsForCurrentUser(BDDMockito.anyLong())).willReturn(ResponseEntity.ok(Arrays.asList(new CarResponsePayload())));
 
-        Assert.assertThat(this.carController.getAllCars(1L), Is.is(ResponseEntity.ok(Arrays.asList(new Car()))));
+        Assert.assertThat(this.carController.getAllCars(1L), Is.is(ResponseEntity.ok(Arrays.asList(new CarResponsePayload()))));
     }
 }
