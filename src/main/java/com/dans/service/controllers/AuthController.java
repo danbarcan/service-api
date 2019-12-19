@@ -36,4 +36,14 @@ public class AuthController {
     public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody SignUpPayload signUpPayload) {
         return authService.registerUser(signUpPayload);
     }
+
+    @GetMapping("/resetPwd")
+    public void resetPassword(@RequestParam String email) {
+        authService.resetPassword(email);
+    }
+
+    @GetMapping("/changePwd")
+    public ResponseEntity<ApiResponse> changePassword(@RequestParam String password, @RequestParam String token) {
+        return authService.changePassword(password, token);
+    }
 }

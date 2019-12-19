@@ -23,6 +23,7 @@ public class Message implements Serializable {
     private String emailAddress;
     private String username;
     private String name;
+    private String token;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Job job;

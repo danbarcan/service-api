@@ -48,9 +48,11 @@ public class MailService {
     @Value("${mail.offer.refused}")
     private String refusedOfferMessage;
 
-    private String fromAddress = "no-reply@serviceulmeu.ro";
+    private String resetPasswordMessage = "http://smart-service.ro/new-password?token=";
 
-    private String fromName = "Serviceul meu";
+    private String fromAddress = "no-reply@smart-service.ro";
+
+    private String fromName = "Smart Service";
 
     public void sendRegisterMail(com.dans.service.messaging.entities.Message message) {
         sendmail("Inregistrare reusita", registerMessage, message.getEmailAddress(), fromAddress, fromName);
@@ -66,6 +68,10 @@ public class MailService {
 
     public void sendAcceptedOfferMail(com.dans.service.messaging.entities.Message message) {
         sendmail("Oferta ta a fost acceptata", acceptedOfferMessage, message.getJob().getAcceptedService().getEmail(), fromAddress, fromName);
+    }
+
+    public void sendPasswordResetMail(com.dans.service.messaging.entities.Message message) {
+        sendmail("Resetare parola", resetPasswordMessage + message.getToken(), message.getEmailAddress(), fromAddress, fromName);
     }
 
     public boolean sendmail(String title, String content, String toAddress, String fromAddress, String fromName) {

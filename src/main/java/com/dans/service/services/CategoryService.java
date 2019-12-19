@@ -57,6 +57,6 @@ public class CategoryService {
     }
 
     public ResponseEntity<List<Category>> getAllCategories() {
-        return ResponseEntity.ok(categoryRepository.findAll());
+        return ResponseEntity.ok(categoryRepository.findAllByOrderByDescription());
     }
 }

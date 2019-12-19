@@ -31,6 +31,8 @@ public class Subscriber {
             case ACCEPTED_OFFER:
                 mailService.sendAcceptedOfferMail(msg);
                 break;
+            case RESET_PASSWORD:
+                mailService.sendPasswordResetMail(msg);
             default:
                 log.info("Message type: {} not recognized", msg.getMessageType());
         }

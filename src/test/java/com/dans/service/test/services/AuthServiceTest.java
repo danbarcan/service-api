@@ -10,6 +10,7 @@ import com.dans.service.payloads.JwtAuthenticationResponse;
 import com.dans.service.payloads.LoginPayload;
 import com.dans.service.payloads.SignUpPayload;
 import com.dans.service.repositories.CategoryRepository;
+import com.dans.service.repositories.PasswordTokenRepository;
 import com.dans.service.repositories.RoleRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.JwtTokenProvider;
@@ -61,6 +62,9 @@ public class AuthServiceTest {
     private CategoryRepository categoryRepository;
 
     @Mock
+    private PasswordTokenRepository passwordTokenRepository;
+
+    @Mock
     private Authentication authentication;
 
     @Mock
@@ -102,7 +106,7 @@ public class AuthServiceTest {
 
     @Before
     public void setUp() {
-        authService = new AuthService(authenticationManager, tokenProvider, passwordEncoder, userRepository, roleRepository, categoryRepository, publisher);
+        authService = new AuthService(authenticationManager, tokenProvider, passwordEncoder, userRepository, roleRepository, categoryRepository, passwordTokenRepository, publisher);
     }
 
     @Test
