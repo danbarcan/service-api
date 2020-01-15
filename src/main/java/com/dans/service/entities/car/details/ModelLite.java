@@ -23,10 +23,9 @@ public class ModelLite {
 
     private String name;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "manufacturer_id")
-    private Manufacturer manufacturer;
+    private ManufacturerLite manufacturer;
 
 
     @Override

@@ -22,10 +22,9 @@ public class TypeYearLite {
 
     private String name;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "model_id")
-    private Model model;
+    private ModelLite model;
 
     @Override
     public String toString() {

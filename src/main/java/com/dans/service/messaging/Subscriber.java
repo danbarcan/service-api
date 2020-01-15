@@ -33,6 +33,7 @@ public class Subscriber {
                 break;
             case RESET_PASSWORD:
                 mailService.sendPasswordResetMail(msg);
+                break;
             default:
                 log.info("Message type: {} not recognized", msg.getMessageType());
         }

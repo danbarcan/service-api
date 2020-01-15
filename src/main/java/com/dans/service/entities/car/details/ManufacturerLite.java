@@ -20,7 +20,6 @@ public class ManufacturerLite {
 
     private String name;
 
-
     @Override
     public String toString() {
         return "Manufacturer{" +

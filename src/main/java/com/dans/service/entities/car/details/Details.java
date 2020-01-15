@@ -28,10 +28,9 @@ public class Details {
     private String power;
     private String engineCode;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "type_year_id")
-    private TypeYear typeYear;
+    private TypeYearLite typeYear;
 
     @Override
     public String toString() {
