@@ -92,13 +92,13 @@ public class UserService {
         if (!StringUtils.isEmpty(userProfilePayload.getServiceName())) {
             serviceDetails.setName(userProfilePayload.getServiceName());
         }
-        if (userProfilePayload.getCategories() == null) {
+        if (userProfilePayload.getCategories() != null) {
             serviceDetails.setCategories(getCategoriesFromIdList(categoryRepository, userProfilePayload.getCategories()));
         }
-        if (userProfilePayload.getLat() == null) {
+        if (userProfilePayload.getLat() != null) {
             serviceDetails.setLat(userProfilePayload.getLat());
         }
-        if (userProfilePayload.getLng() == null) {
+        if (userProfilePayload.getLng() != null) {
             serviceDetails.setLng(userProfilePayload.getLng());
         }
     }
