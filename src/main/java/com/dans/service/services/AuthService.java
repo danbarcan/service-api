@@ -74,12 +74,12 @@ public class AuthService {
     }
 
     public ResponseEntity<ApiResponse> registerUser(SignUpPayload signUpPayload) {
-        if (userRepository.existsByEmail(signUpPayload.getEmail())) {
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(signUpPayload.getEmail()))) {
             return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
 
-        if (userRepository.existsByUsername(signUpPayload.getUsername())) {
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(signUpPayload.getUsername()))) {
             return new ResponseEntity<>(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }

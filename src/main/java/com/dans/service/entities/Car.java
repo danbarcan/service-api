@@ -1,12 +1,10 @@
 package com.dans.service.entities;
 
 import com.dans.service.entities.car.details.Details;
-import com.dans.service.payloads.CarPayload;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Set;

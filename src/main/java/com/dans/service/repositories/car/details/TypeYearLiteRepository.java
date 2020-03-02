@@ -1,6 +1,5 @@
 package com.dans.service.repositories.car.details;
 
-import com.dans.service.entities.car.details.TypeYear;
 import com.dans.service.entities.car.details.TypeYearLite;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

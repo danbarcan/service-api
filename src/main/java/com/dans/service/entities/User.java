@@ -103,5 +103,5 @@ public class User implements Serializable {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToMany(mappedBy = "hiddenForUsers")
-    Set<Job> hiddenJobs;
+    private Set<Job> hiddenJobs;
 }

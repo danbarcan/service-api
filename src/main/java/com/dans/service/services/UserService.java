@@ -3,11 +3,13 @@ package com.dans.service.services;
 import com.dans.service.entities.ServiceDetails;
 import com.dans.service.entities.User;
 import com.dans.service.entities.UserProfile;
+import com.dans.service.payloads.ServiceProfilePayload;
 import com.dans.service.payloads.UserProfilePayload;
 import com.dans.service.payloads.UserSummary;
 import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.UserPrincipal;
+import com.dans.service.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -59,10 +61,26 @@ public class UserService {
         return false;
     }
 
+    public Boolean updateServiceDetails(ServiceProfilePayload serviceProfilePayload) {
+        Optional<User> userOptional = userRepository.findById(serviceProfilePayload.getId());
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            updateServiceDetails(user.getServiceDetails(), serviceProfilePayload);
+
+            userRepository.save(user);
+
+            return true;
+        }
+
+        return false;
+    }
+
     public UserProfile getUserDetails(Long id) {
         Optional<User> user = userRepository.findById(id);
 
-        return user.isPresent() ? UserProfile.createUserProfileFromUser(user.get()) : null;
+        return user.map(UserProfile::createUserProfileFromUser).orElse(null);
     }
 
     private void updateUserFields(User user, UserProfilePayload userProfilePayload) {
@@ -81,25 +99,27 @@ public class UserService {
         if (!StringUtils.isEmpty(userProfilePayload.getPassword())) {
             user.setPassword((passwordEncoder.encode(userProfilePayload.getPassword())));
         }
-
-        updateServiceDetails(user.getServiceDetails(), userProfilePayload);
     }
 
-    private void updateServiceDetails(ServiceDetails serviceDetails, UserProfilePayload userProfilePayload) {
-        if (!StringUtils.isEmpty(userProfilePayload.getServiceAddress())) {
-            serviceDetails.setAddress(userProfilePayload.getServiceAddress());
+    private void updateServiceDetails(ServiceDetails serviceDetails, ServiceProfilePayload serviceProfilePayload) {
+        if (!StringUtils.isEmpty(serviceProfilePayload.getServiceAddress())) {
+            serviceDetails.setAddress(serviceProfilePayload.getServiceAddress());
         }
-        if (!StringUtils.isEmpty(userProfilePayload.getServiceName())) {
-            serviceDetails.setName(userProfilePayload.getServiceName());
+        if (!StringUtils.isEmpty(serviceProfilePayload.getServiceName())) {
+            serviceDetails.setName(serviceProfilePayload.getServiceName());
         }
-        if (userProfilePayload.getCategories() != null) {
-            serviceDetails.setCategories(getCategoriesFromIdList(categoryRepository, userProfilePayload.getCategories()));
+        if (serviceProfilePayload.getCategories() != null) {
+            serviceDetails.setCategories(getCategoriesFromIdList(categoryRepository, serviceProfilePayload.getCategories()));
         }
-        if (userProfilePayload.getLat() != null) {
-            serviceDetails.setLat(userProfilePayload.getLat());
+        if (serviceProfilePayload.getLat() != null) {
+            serviceDetails.setLat(serviceProfilePayload.getLat());
         }
-        if (userProfilePayload.getLng() != null) {
-            serviceDetails.setLng(userProfilePayload.getLng());
+        if (serviceProfilePayload.getLng() != null) {
+            serviceDetails.setLng(serviceProfilePayload.getLng());
+        }
+
+        if (serviceProfilePayload.getImage() != null) {
+            serviceDetails.setImage(ImageUtils.base64StringToByteArray(serviceProfilePayload.getImage()));
         }
     }
 }

@@ -53,7 +53,7 @@ public class Job implements Serializable {
             name = "job_category",
             joinColumns = @JoinColumn(name = "job_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    Set<Category> categories;
+    private Set<Category> categories;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(fetch = FetchType.EAGER)
@@ -80,7 +80,7 @@ public class Job implements Serializable {
             name = "hidden_jobs",
             joinColumns = @JoinColumn(name = "job_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    Set<User> hiddenForUsers;
+    private Set<User> hiddenForUsers;
 
     public static Job createJobFromJobPayload(JobPayload jobPayload, User user) {
         return Job.builder()

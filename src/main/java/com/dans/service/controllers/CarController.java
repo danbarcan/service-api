@@ -1,6 +1,5 @@
 package com.dans.service.controllers;
 
-import com.dans.service.entities.Car;
 import com.dans.service.payloads.CarPayload;
 import com.dans.service.payloads.CarResponsePayload;
 import com.dans.service.services.CarService;

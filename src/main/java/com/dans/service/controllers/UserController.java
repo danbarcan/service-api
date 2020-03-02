@@ -1,6 +1,7 @@
 package com.dans.service.controllers;
 
 import com.dans.service.entities.UserProfile;
+import com.dans.service.payloads.ServiceProfilePayload;
 import com.dans.service.payloads.UserIdentityAvailability;
 import com.dans.service.payloads.UserProfilePayload;
 import com.dans.service.payloads.UserSummary;
@@ -49,5 +50,11 @@ public class UserController {
     //@PreAuthorize("authentication.id = userProfilePayload.getId()")
     public Boolean updateUserProfile(@Valid @RequestBody UserProfilePayload userProfilePayload) {
         return userService.updateUserDetails(userProfilePayload);
+    }
+
+    @PostMapping("/user/updateServiceProfile")
+    //@PreAuthorize("authentication.id = serviceProfilePayload.getId()")
+    public Boolean updateServiceProfile(@Valid @RequestBody ServiceProfilePayload serviceProfilePayload) {
+        return userService.updateServiceDetails(serviceProfilePayload);
     }
 }

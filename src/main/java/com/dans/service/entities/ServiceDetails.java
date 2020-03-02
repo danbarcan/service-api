@@ -1,6 +1,7 @@
 package com.dans.service.entities;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -41,5 +42,10 @@ public class ServiceDetails implements Serializable {
             name = "service_category",
             joinColumns = @JoinColumn(name = "service_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    Set<Category> categories;
+    private Set<Category> categories;
+
+    @Lob
+    @Type(type = "org.hibernate.type.ImageType")
+    private byte[] image;
+
 }

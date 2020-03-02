@@ -31,7 +31,7 @@ public class Category implements Serializable {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToMany(mappedBy = "categories")
-    Set<Job> jobCategories;
+    private Set<Job> jobCategories;
 
     public static Set<Category> getCategoriesFromIdList(CategoryRepository categoryRepository, Long[] categoryIds) {
         return Arrays.stream(categoryIds).map(cat -> {

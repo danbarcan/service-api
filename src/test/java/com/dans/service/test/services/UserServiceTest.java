@@ -55,7 +55,6 @@ public class UserServiceTest {
 
     private UserProfilePayload userProfilePayload = UserProfilePayload.builder()
             .id(1L)
-            .cui("12345")
             .email("test@test.com")
             .name("test")
             .oldPassword("oldpass")
