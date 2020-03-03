@@ -113,6 +113,6 @@ public class CarService {
     }
 
     private List<CarResponsePayload> mapListOfCarsToResponse(List<Car> cars) {
-        return cars.stream().map(car -> CarResponsePayload.createJobResponsePayloadFromJob(car)).collect(Collectors.toList());
+        return cars.stream().map(CarResponsePayload::createJobResponsePayloadFromJob).collect(Collectors.toList());
     }
 }

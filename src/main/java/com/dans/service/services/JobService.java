@@ -36,6 +36,7 @@ import static com.dans.service.entities.Category.getCategoriesFromIdList;
 
 @Service
 public class JobService {
+    private static final String JOB_NOT_FOUND = "Job not found";
 
     private JobRepository jobRepository;
     private UserRepository userRepository;
@@ -141,7 +142,7 @@ public class JobService {
     public ResponseEntity<ApiResponse> updateJob(JobPayload jobPayload) {
         Optional<Job> jobOptional = jobRepository.findById(jobPayload.getId());
         if (!jobOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Job not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, JOB_NOT_FOUND));
         }
 
         Job job = jobOptional.get();
@@ -157,7 +158,7 @@ public class JobService {
     public ResponseEntity<ApiResponse> deleteJob(Long jobId) {
         Optional<Job> jobOptional = jobRepository.findById(jobId);
         if (!jobOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Job not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, JOB_NOT_FOUND));
         }
 
         Job job = jobOptional.get();
@@ -212,7 +213,7 @@ public class JobService {
     public ResponseEntity<ApiResponse> hideOrUnhideJob(Long offerId, boolean hide) {
         Optional<Job> jobOptional = jobRepository.findById(offerId);
         if (!jobOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, "Job not found"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, JOB_NOT_FOUND));
         }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
