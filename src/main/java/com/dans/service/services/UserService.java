@@ -9,7 +9,6 @@ import com.dans.service.payloads.UserSummary;
 import com.dans.service.repositories.CategoryRepository;
 import com.dans.service.repositories.UserRepository;
 import com.dans.service.security.UserPrincipal;
-import com.dans.service.utils.ImageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -119,7 +118,7 @@ public class UserService {
         }
 
         if (serviceProfilePayload.getImage() != null) {
-            serviceDetails.setImage(ImageUtils.base64StringToByteArray(serviceProfilePayload.getImage()));
+            serviceDetails.setImage(serviceProfilePayload.getImage().getBytes());
         }
     }
 }
